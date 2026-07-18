@@ -19,9 +19,6 @@ dist-ssr/
 Thumbs.db
 Desktop.ini
 
-# 个人文档
-doc/
-
 # 包管理器 lockfile（项目使用 pnpm）
 package-lock.json
 

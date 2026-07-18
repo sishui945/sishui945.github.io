@@ -1,57 +1,119 @@
-# 个人博客（个人网站）
+# 个人网站（my-portfolio）
+
+## 关于作者
+
+- **似水Sishui（sishui945）**，浙江理工大学 2025 级，**机器人工程专业**（不是信息工程）
+- 大一在读，2026 暑假后升大二
+- C 程序设计 92（最强项）、线代 90、高数 A1 87 → A2 82
+- 弱项：电路原理 71（模电前置不牢）、英语持续下滑 78→68（六级预警）、马原 62 擦线、体育缺两学期需补修
+
+### 九大目标（优先级排序）
+
+| # | 目标 | 启动时间 | 主线期 |
+|---|------|----------|--------|
+| 1 | **个人网站**（数字名片+博客+项目集） | 大一暑假 | 大二上 V1 上线，持续迭代 |
+| 2 | **考研上岸** | 大三上 | 大三下~大四上 |
+| 3 | **C++格式转换器**（图片/音频/视频/模型） | 大二暑假 | 大二暑假~大三上 |
+| 4 | **AI陪伴模型**（Python/PyTorch） | 大三上 | 大三~大四 |
+| 5 | **B站百万播放动画**（Blender + 哲学可视化） | 大三上 | 大三~大四碎片积累 |
+| 6 | **弦论研究**（Goldstein → Griffiths → Peskin） | 大一暑假 | 大二~大三周末 |
+| 7 | **Steam 3D游戏**（UE5，定价 24r） | 大四上 | 大四+毕业后 |
+| 8 | **OS & 编译器**（xv6 → MiniLang → 自举） | 大二暑假 | 大二~大四长期 |
+| 9 | **mcmod**（Fabric/Forge） | 假期 | 假期项目 |
+
+### 八条发展线
+
+1. **CS**：C → C++ → 数据结构/算法 → OS → 编译器 → AI系统。终极目标：OS 能跑自己写的编译器，编译器能编译自己的内核
+2. **电子信息**：电路 → 模电/数电 → STM32 → PCB设计 → 射频/无线 → 自平衡机器人
+3. **哲学**：24 个月系统规划（古希腊 → 德国观念论 → 分析哲学 → 大陆哲学 → 专题论文），使用 Obsidian + Zotero
+4. **文学**：主动阅读 + 晨读习惯 + 建立文学联系
+5. **画画**：素描/透视/构图（6月） → 人体/色彩/光影（12月） → 风格形成
+6. **建模与动画**：Blender 基础 → 硬表面/有机建模 → 动画/物理模拟 → 几何节点/TVC
+7. **游戏开发**：UE5 + C++，4 阶段到 Steam 发布。5 维能力雷达：程序×美术×设计×音频×运营
+8. **Node.js + NestJS 全栈**：2 周可从零到部署带登录的 API（对标 Spring Boot）
+
+### 学习风格
+
+- **边学边做**：项目驱动，不假设已掌握任何技术点
+- **MECE + PDCA**：每学期目标 3-4 个，不重叠；每学期末诚实回顾
+- **A/B/C 三档降级**：卡住 2 周自动降档，降级比放弃好
+- **防崩机制**：GPA 预警暂停课外项目、连续 3 天不想做→休息 2 天回到 C 档
+
+### 当前阶段（大一暑假 Day 1-15）
+
+- 主线：个人网站 V1（Vite + Tailwind + 纯 JS）
+- 辅线：Effective Modern C++（42 条款，每天 3-4 条）+ CSAPP 预备
+- 英语：六级词汇 100/天
+
+### 下学期（大二上 2026.9）重点
+
+- 课程 12 门：模电（⭐电路 71 前置不牢）、毛概（笔试不能裸考）、C++（白送 GPA）
+- CET-6 必须通过 + 英语成绩扭转
+- 网站上线 + 周更博客
 
 ## 项目概述
 
-- **定位**：我的**数字名片**和**项目集散中心**。
-- **内容**：
-    - **主页**：你的简介、技能树、核心理念。
-    - **博客**：记录你的学习笔记（C++心得、哲学思考）、项目复盘等。
-    - **项目集**：下面所有项目的展示页，附上GitHub链接、演示视频。
-    - **互动与社区：和访客建立连接**
-        - **评论系统**：在博客或作品下开放评论（如Disqus、Giscus），接受反馈。
-        - **留言板/访客簿**：一个轻量的公共留言区，增加人情味。
-        - **邮件通讯订阅**：让喜欢你内容的读者留下邮箱
-        - **小调查/投票**：偶尔发起一个有趣的问题，收集大家的看法。
-    - **资源推荐**：你整理的书单、常用工具、学习资源、好物清单，附上简短点评。
-    - **个性化与趣味**：
-      - 音乐播放器：共享你正在听的歌，或作为网站背景音乐（但最好默认关闭，由访客手动开启）。
-      - 小游戏/交互彩蛋：一个隐藏的点击彩蛋、一个小游戏，对于技术向个人站来说，本身就是能力和个性的展露。
+- **定位**：数字名片 + 项目集散中心 + 学习笔记博客
+- **原则**：上线比完美重要，边学边做，持续迭代
+
+### 当前功能
+
+- 单页 SPA，7 个 section：Hero → 关于我 → 项目 → 技能 → 学习旅程 → 博客预览 → 联系
+- 暗色模式（`darkMode: 'class'` + localStorage 持久化）
+- 响应式（移动优先：1 列 → md:2 列 → lg:3 列）
+- 数据驱动渲染：数据文件 → render 函数 → DOM
+- 导航高亮（IntersectionObserver）+ 滚动到顶部按钮 + section 滚动揭示动画
+
+### 规划中功能
+
+- 博客系统（blog/index.html + Markdown 渲染 + Giscus 评论）
+- 留言板、邮件订阅、资源推荐
+- 音乐播放器（默认关闭）、交互彩蛋
+- 部署到 Vercel
 
 ## 技术栈
 
-- **构建工具**: Vite 8 (底层使用 Rolldown)
+- **构建工具**: Vite 8（Rolldown）
 - **CSS**: Tailwind CSS 3 + PostCSS + Autoprefixer
 - **包管理器**: pnpm
-- **无框架** — 纯 HTML + 原生 JS (ES modules)
+- **无框架** — 纯 HTML + 原生 JS (ES modules)，数据视图分离
 
 ## 项目结构
 
 ```
-index.html          # 主页面 — 自包含的 Tailwind 页面（导航、Hero、技能卡片、Footer）
+index.html              # 主页面 — 7 个 section，纯 Tailwind 类名
 src/
-  style.css         # Tailwind 指令 (@tailwind base/components/utilities)
-  main.js           # ⚠️ Vite 脚手架遗留代码，引用了不存在的 #app，当前未被 index.html 使用
-  counter.js        # ⚠️ 同上，脚手架遗留的计数器组件
-  assets/           # 图片和 SVG
-public/             # 静态资源 (favicon, icons sprite)
+  style.css             # Tailwind 指令 + fadeIn/bounce/section-reveal 动画
+  main.js               # 入口：初始化渲染 + 暗色模式 + 滚动效果
+  theme.js              # 暗色模式切换 + localStorage 持久化
+  render.js             # 7 个渲染函数（renderSkills/renderProjects/...）
+  data/
+    skills.js           # 技能数据（按类别分组：语言/前端/工具/创意）
+    projects.js         # 项目数据（含 status + links）
+    contact.js          # 联系方式
+    about-tags.js       # 兴趣标签云
+    interests.js        # Hero 兴趣徽章
+    timeline.js         # 学习旅程时间线
+    blog-posts.js       # 博客预览占位数据
+  assets/               # 图片（hero.png, logo.png）
+public/                 # 静态资源（favicon.svg, icons.svg）
+doc/                    # 大学规划文档（不参与构建）
 ```
 
-## 关键注意点
+## 数据视图分离模式
 
-- `index.html` 没有 `<div id="app">` 容器，它是一张完整的独立页面，所有内容通过 Tailwind 类名直接写在 HTML 中
-- `src/main.js` 尝试向 `#app` 注入内容，但该元素不存在，因此脚本虽然加载但实际无效果
-- 页面中的技能进度条使用内联 `style="width: X%"` 控制宽度
-- Tailwind 配置的 content 路径包含 `./index.html` 和 `./src/**/*.{js,ts,jsx,tsx}`
-- `.vscode/launch.json` 配置了 Edge 浏览器调试，端口 8080（与 Vite 默认 5173 不一致，需手动对齐）
+新增 section 遵循统一模式：
+1. 在 `src/data/xxx.js` 定义数据数组
+2. 在 `src/render.js` 写 `renderXxx(container, data)` 函数
+3. 在 `index.html` 放空容器 `<div id="xxx-grid">`
+4. 在 `src/main.js` 的 `DOMContentLoaded` 里调用渲染
 
-## 编码规范
-
-## 当前开发状态
-- 项目初始化完成
 ## 注意事项
 
 - 环境变量在 .env 文件中，不要提交到 Git
 - 所有新功能先创建 Git 分支再开发
+- 数据修改只需编辑 `src/data/` 下的对应文件，不动 render 函数
+- Hero 区目前写的是"信息工程"——实际是"机器人工程"，下次修改时纠正
 
 <!-- superpowers-zh:begin (do not edit between these markers) -->
 # Superpowers-ZH 中文增强版

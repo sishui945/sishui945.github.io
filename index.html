@@ -4,53 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>似水Sishui - 个人主页</title>
+  <title>似水Sishui — 边学边做</title>
 </head>
 
-<!-- body 背景色同时定义浅色和暗色的默认值，配合 Tailwind darkMode: 'class' -->
 <body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-sans antialiased">
 
   <!-- ========== 导航栏 ========== -->
-  <!-- role="banner" 是 header 的隐式 ARIA 角色，显式声明更清晰 -->
-  <header class="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50">
-    <nav class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center"
-         aria-label="主导航">
+  <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200/60 dark:border-gray-700/60">
+    <nav class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center" aria-label="主导航">
       <!-- Logo -->
-      <a href="#" class="flex items-center gap-2 text-2xl font-bold text-blue-600 dark:text-blue-400
-                         tracking-tight hover:opacity-80 transition-opacity">
+      <a href="#" class="flex items-center gap-2 group">
         <img src="./src/assets/logo.png" alt="似水Sishui 头像" class="w-8 h-8 rounded-md">
-        <span class="text-xl font-bold text-gray-900 dark:text-white">似水Sishui</span>
+        <span class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">似水Sishui</span>
       </a>
 
       <!-- 桌面端链接 -->
-      <ul class="hidden md:flex items-center space-x-8">
-        <li><a href="#home"
-               class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400
-                      font-medium transition-colors duration-200">首页</a></li>
-        <li><a href="#about"
-               class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400
-                      font-medium transition-colors duration-200">关于</a></li>
-        <li><a href="#skills"
-               class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400
-                      font-medium transition-colors duration-200">技能</a></li>
-        <li><a href="#projects"
-               class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400
-                      font-medium transition-colors duration-200">项目</a></li>
-        <li><a href="#contact"
-               class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400
-                      font-medium transition-colors duration-200">联系</a></li>
+      <ul class="hidden md:flex items-center space-x-8 text-sm">
+        <li><a href="#home"     class="text-blue-600 dark:text-blue-400 font-medium transition-colors duration-200">首页</a></li>
+        <li><a href="#about"    class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200">关于</a></li>
+        <li><a href="#projects" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200">项目</a></li>
+        <li><a href="#skills"   class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200">技能</a></li>
+        <li><a href="#contact"  class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200">联系</a></li>
       </ul>
 
       <!-- 右侧：暗色切换 + 汉堡菜单 -->
       <div class="flex items-center gap-2">
-        <!-- 暗色模式切换按钮 —— JS 在 theme.js 中绑定点击事件 -->
         <button id="theme-toggle" type="button"
                 class="p-2 text-lg rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label="切换到暗色模式">
           🌙
         </button>
 
-        <!-- 移动端汉堡按钮 —— aria-expanded 和 aria-controls 供屏幕阅读器使用 -->
         <button type="button"
                 class="md:hidden p-2 text-gray-600 dark:text-gray-300
                        hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800
@@ -65,102 +49,116 @@
   </header>
 
   <!-- ========== 主内容区 ========== -->
-  <!-- <main> 表示页面唯一主要内容，对屏幕阅读器和 SEO 友好 -->
   <main>
 
-    <!-- ========== Hero 区域 ========== -->
+    <!-- ================================================================ -->
+    <!-- 1. Hero — 第一印象：我是谁 + 兴趣广度 + 装饰光斑                       -->
+    <!-- ================================================================ -->
     <section id="home" aria-labelledby="hero-heading"
-             class="min-h-[80vh] flex flex-col items-center justify-center px-6 text-center
-                    bg-gray-50 dark:bg-gray-950 animate-fade-in">
-      <!-- 头像占位，aria-hidden 因为纯装饰 -->
-      <div class="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full mb-6 shadow-lg
-                  flex items-center justify-center text-white text-4xl"
-           aria-hidden="true">👤</div>
+             class="relative min-h-[85vh] flex flex-col items-center justify-center px-6 text-center
+                    bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900
+                    overflow-hidden animate-fade-in">
 
-      <h1 id="hero-heading" class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-        你好，我是<span class="text-blue-600 dark:text-blue-400">追星者</span>
+      <!-- 装饰光斑 + 星点 -->
+      <div class="absolute inset-0 -z-10 opacity-40 dark:opacity-25" aria-hidden="true">
+        <div class="absolute top-10 left-1/4 w-72 h-72 bg-blue-300 dark:bg-blue-700 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-purple-300 dark:bg-purple-700 rounded-full blur-3xl"></div>
+        <!-- 星点 -->
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="star star-4"></div>
+        <div class="star star-5"></div>
+      </div>
+
+      <!-- 头像 -->
+      <div class="relative mb-6">
+        <div class="w-28 h-28 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-800 shadow-xl">
+          <img src="./src/assets/hero.png" alt="似水Sishui" class="w-full h-full object-cover">
+        </div>
+      </div>
+
+      <!-- 名字 + 身份 -->
+      <h1 id="hero-heading" class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+        似水<span class="text-blue-600 dark:text-blue-400">Sishui</span>
       </h1>
-
-      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed mb-8">
-        正在学习 Web开发，Computer science，信息工程，游戏制作，绘画，弦论等
+      <p class="text-lg text-gray-500 dark:text-gray-400 mb-2">
+        浙江理工大学 · 机器人工程 · 大一
+      </p>
+      <p class="text-base text-gray-400 dark:text-gray-500 mb-8 max-w-lg leading-relaxed">
+        从底层代码到物理定律，从 3D 建模到哲学文本——<br>我对理解"事物如何运作"上瘾。
       </p>
 
-      <div class="flex flex-col sm:flex-row gap-4">
-        <a href="#skills"
-           class="px-8 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-medium
-                  hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-md hover:shadow-lg">
-          查看技能
-        </a>
-        <a href="#contact"
-           class="px-8 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
-                  rounded-lg font-medium hover:border-blue-600 dark:hover:border-blue-400
-                  hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-          联系我
-        </a>
+      <!-- 兴趣徽章 -->
+      <div id="interests-row" class="flex flex-wrap justify-center gap-2 mb-10" aria-label="兴趣方向">
+        <!-- JS 从 src/data/interests.js 动态渲染 -->
+      </div>
+
+      <!-- CTA 按钮 -->
+      <a href="#projects"
+         class="px-8 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-medium
+                hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-md hover:shadow-lg">
+        查看项目
+      </a>
+
+      <!-- 滚动提示 -->
+      <div class="absolute bottom-8 animate-bounce-arrow text-gray-400 dark:text-gray-500" aria-hidden="true">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
       </div>
     </section>
 
-    <!-- ========== 关于我 ========== -->
-    <!--
-      两栏布局（边学边做）：
-        - CSS Grid: grid-cols-1（手机单栏）→ lg:grid-cols-[6fr_4fr]（桌面左6右4）
-        - fr 是 fraction 的缩写，表示"份数"，6fr : 4fr 即左栏占 60%、右栏占 40%
-        - flex-wrap：标签云中的标签自动换行，超出宽度就折到下一行
-    -->
+    <!-- ================================================================ -->
+    <!-- 2. 关于我 — 三段式叙事 + 兴趣标签云                                 -->
+    <!-- ================================================================ -->
     <section id="about" aria-labelledby="about-heading"
              class="py-20 px-6 bg-white dark:bg-gray-900">
       <div class="max-w-6xl mx-auto">
         <h2 id="about-heading" class="text-3xl font-bold mb-10 text-center dark:text-white">关于我</h2>
 
-        <div class="grid grid-cols-1 lg:grid-cols-[6fr_4fr] gap-10 items-start">
-          <!-- 左栏：自我介绍文字 -->
-          <div>
-            <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-4">
-              正在学习 Web开发、Computer Science、信息工程、游戏制作、绘画、弦论等方向。
-            </p>
-            <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-              以项目驱动学习，边学边做，在实践中成长。这个网站就是我的练手之作，
-              每一个模块都在学习新技术点的同时逐步完善。
-            </p>
+        <div class="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 items-start">
+          <!-- 左栏：三段式自我介绍 -->
+          <div class="space-y-5">
+            <div>
+              <h3 class="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">我是谁</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                浙江理工大学机器人工程专业大一学生。写 C/C++ 和 Java，做 Blender 建模，读哲学和物理。编程是我的工具，物理是我的视角，建模和绘画是创作出口。
+              </p>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">我在做什么</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                用这个网站作为练手项目——从 Vite + Tailwind CSS 搭骨架，到暗色模式和响应式，每一个模块都在边学边做中完善。同时在读 Effective Modern C++ 和 CSAPP，补计算机底层基础。
+              </p>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">我的方向</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                短期让网站上线并持续记录学习。中期深入全栈开发和 C++ 项目。长期想做 OS、编译器、AI 模型、独立游戏——不给自己设边界，每学期专注于 3-4 件最重要的事。
+              </p>
+            </div>
           </div>
 
-          <!-- 右栏：技能标签云 —— JS 从 skills 数据动态渲染 -->
-          <!-- flex-wrap: 标签超出容器宽度自动换行，不需要手动分行 -->
+          <!-- 右栏：兴趣标签云 -->
           <div id="about-tags"
                class="flex flex-wrap gap-2 items-center justify-center lg:justify-start"
-               aria-label="技能标签">
+               aria-label="兴趣标签">
             <!-- 由 src/render.js:renderTagCloud() 动态填充 -->
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ========== 技能区域 ========== -->
-    <!-- 技能卡片不再硬编码在 HTML 中，由 JS 从 src/data/skills.js 动态渲染 -->
-    <section id="skills" aria-labelledby="skills-heading"
+    <!-- ================================================================ -->
+    <!-- 3. 项目 — 证据先于声明，展示实际做过的作品                           -->
+    <!-- ================================================================ -->
+    <section id="projects" aria-labelledby="projects-heading"
              class="py-20 px-6 bg-gray-50 dark:bg-gray-950">
       <div class="max-w-6xl mx-auto">
-        <h2 id="skills-heading" class="text-3xl font-bold text-center mb-4 dark:text-white">技术栈</h2>
-        <p class="text-gray-500 dark:text-gray-400 text-center mb-12">持续学习中，进度条代表当前掌握程度</p>
-
-        <!-- JS 会把技能卡片渲染到这里 -->
-        <!-- Grid 布局：手机1列，平板2列，桌面3列 -->
-        <div id="skills-grid"
-             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- 由 src/render.js:renderSkills() 动态填充 -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== 项目展示 ========== -->
-    <!-- 项目卡片由 JS 从 src/data/projects.js 动态渲染 -->
-    <section id="projects" aria-labelledby="projects-heading"
-             class="py-20 px-6 bg-white dark:bg-gray-900">
-      <div class="max-w-6xl mx-auto">
         <h2 id="projects-heading" class="text-3xl font-bold text-center mb-4 dark:text-white">项目作品</h2>
-        <p class="text-gray-500 dark:text-gray-400 text-center mb-12">边学边做的练手项目</p>
+        <p class="text-gray-500 dark:text-gray-400 text-center mb-12">边学边做的练手项目，每一个都踩过坑</p>
 
-        <!-- Grid：手机1列，平板2列，桌面3列 -->
         <div id="projects-grid"
              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- 由 src/render.js:renderProjects() 动态填充 -->
@@ -168,15 +166,62 @@
       </div>
     </section>
 
-    <!-- ========== 联系我 ========== -->
-    <!-- 联系卡片也不再硬编码，由 JS 从 src/data/contact.js 动态渲染 -->
-    <section id="contact" aria-labelledby="contact-heading"
+    <!-- ================================================================ -->
+    <!-- 4. 技能 — 按类别分组的工具栈，不设百分比                            -->
+    <!-- ================================================================ -->
+    <section id="skills" aria-labelledby="skills-heading"
              class="py-20 px-6 bg-white dark:bg-gray-900">
+      <div class="max-w-6xl mx-auto">
+        <h2 id="skills-heading" class="text-3xl font-bold text-center mb-4 dark:text-white">技术工具</h2>
+        <p class="text-gray-500 dark:text-gray-400 text-center mb-12">按掌握程度分类：熟练 / 学习中 / 初探</p>
+
+        <div id="skills-grid"
+             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- 由 src/render.js:renderSkills() 动态填充 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- 5. 最新文章 — 最新文章引流入口                                     -->
+    <!-- ================================================================ -->
+    <section id="blog" aria-labelledby="blog-heading"
+             class="py-20 px-6 bg-white dark:bg-gray-900">
+      <div class="max-w-4xl mx-auto">
+        <h2 id="blog-heading" class="text-3xl font-bold text-center mb-4 dark:text-white">最新文章</h2>
+        <p class="text-gray-500 dark:text-gray-400 text-center mb-12">学习笔记、踩坑记录、项目复盘</p>
+
+        <div id="blog-preview-grid"
+             class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <!-- 由 src/render.js:renderBlogPreview() 动态填充 -->
+        </div>
+
+        <div class="text-center">
+          <a href="/blog/"
+             class="inline-flex items-center gap-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600
+                    text-gray-700 dark:text-gray-300 rounded-lg font-medium
+                    hover:border-blue-600 dark:hover:border-blue-400
+                    hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            查看全部文章
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- 7. 联系我 — 社交链接                                                 -->
+    <!-- ================================================================ -->
+    <section id="contact" aria-labelledby="contact-heading"
+             class="py-20 px-6 bg-gray-50 dark:bg-gray-950">
       <div class="max-w-4xl mx-auto text-center">
         <h2 id="contact-heading" class="text-3xl font-bold mb-4 dark:text-white">联系我</h2>
-        <p class="text-gray-500 dark:text-gray-400 mb-12">欢迎通过以下方式找到我</p>
+        <p class="text-gray-500 dark:text-gray-400 mb-12">
+          欢迎通过以下方式找到我，聊项目、合作或任何有趣的话题
+        </p>
 
-        <!-- JS 会把联系卡片渲染到这里 -->
         <div id="contact-grid"
              class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- 由 src/render.js:renderContact() 动态填充 -->
@@ -187,12 +232,41 @@
   </main>
 
   <!-- ========== Footer ========== -->
-  <footer class="bg-gray-900 dark:bg-black text-gray-400 dark:text-gray-500 py-8 px-6 text-center"
+  <footer class="bg-gray-900 dark:bg-black text-gray-400 dark:text-gray-500 py-10 px-6"
           role="contentinfo">
-    <p>© 2026 似水Sishui. 正在构建中...</p>
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+      <!-- 品牌 -->
+      <div>
+        <p class="text-white dark:text-gray-200 font-bold mb-2">似水Sishui</p>
+        <p>边学边做，在代码、物理与画笔之间探索世界。</p>
+      </div>
+      <!-- 快速链接 -->
+      <div>
+        <p class="text-white dark:text-gray-200 font-bold mb-2">快速链接</p>
+        <ul class="space-y-1">
+          <li><a href="#home" class="hover:text-white dark:hover:text-gray-300 transition-colors">首页</a></li>
+          <li><a href="#projects" class="hover:text-white dark:hover:text-gray-300 transition-colors">项目</a></li>
+          <li><a href="/blog/" class="hover:text-white dark:hover:text-gray-300 transition-colors">博客</a></li>
+        </ul>
+      </div>
+      <!-- 社交 -->
+      <div>
+        <p class="text-white dark:text-gray-200 font-bold mb-2">社交链接</p>
+        <ul class="space-y-1">
+          <li><a href="https://github.com/sishui945" target="_blank" rel="noopener noreferrer"
+                 class="hover:text-white dark:hover:text-gray-300 transition-colors">GitHub</a></li>
+          <li><a href="https://space.bilibili.com/1909585735" target="_blank" rel="noopener noreferrer"
+                 class="hover:text-white dark:hover:text-gray-300 transition-colors">B站</a></li>
+          <li><a href="mailto:3693657762@qq.com"
+                 class="hover:text-white dark:hover:text-gray-300 transition-colors">邮箱</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto mt-8 pt-6 border-t border-gray-800 dark:border-gray-800 text-center">
+      <p>© 2026 似水Sishui · 使用 Vite + Tailwind CSS 构建</p>
+    </div>
   </footer>
 
-  <!-- ES Module 入口 —— Vite 从这里开始加载所有 JS -->
   <script type="module" src="/src/main.js"></script>
 </body>
 
