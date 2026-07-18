@@ -34,6 +34,33 @@ export function renderSkills(container, data) {
 }
 
 /**
+ * 渲染技能标签云到指定容器
+ * 标签越大表示掌握程度越高，使用 flex-wrap 自动换行
+ * @param {HTMLElement} container - 标签云的父容器
+ * @param {Array} tags - 标签数据数组，每项 { label, level }，level 为 1-100
+ */
+export function renderTagCloud(container, tags) {
+  // 按 level 降序排列，掌握度高的排前面
+  const sorted = [...tags].sort((a, b) => b.level - a.level);
+
+  container.innerHTML = sorted.map(tag => {
+    // 根据 level 动态计算字号：1 → 0.75rem, 100 → 1.25rem
+    const size = 0.75 + (tag.level / 100) * 0.5;
+    return `
+      <span class="inline-block px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20
+                   text-blue-700 dark:text-blue-300 rounded-full
+                   hover:bg-blue-100 dark:hover:bg-blue-900/40
+                   hover:scale-110 transition-all duration-200 cursor-default
+                   border border-blue-200 dark:border-blue-800"
+            style="font-size: ${size}rem"
+            title="${tag.label}">
+        ${tag.label}
+      </span>
+    `;
+  }).join('');
+}
+
+/**
  * 渲染联系卡片到指定容器
  * @param {HTMLElement} container - 联系卡片的父容器
  * @param {Array} data - 联系数据数组
@@ -55,4 +82,44 @@ export function renderContact(container, data) {
       </a>
     `;
   }).join('');
+}
+
+/**
+ * 渲染项目卡片到指定容器
+ * 图片（或占位渐变）+ 标题 + 描述 + 技术标签，hover 上浮
+ * @param {HTMLElement} container
+ * @param {Array} data - 项目数组，每项 { title, desc, tags, image }
+ */
+export function renderProjects(container, data) {
+  container.innerHTML = data.map(project => `
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700
+                overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+      <!-- 图片区：有图片就显示，没有就用渐变色占位 -->
+      ${project.image
+        ? `<img src="${project.image}" alt="${project.title}" class="w-full h-40 object-cover">`
+        : `<div class="w-full h-40 bg-gradient-to-br from-blue-400 to-purple-500
+                      flex items-center justify-center text-white text-4xl"
+               aria-hidden="true">📂</div>`
+      }
+
+      <!-- 文字区 -->
+      <div class="p-5">
+        <h3 class="text-lg font-bold mb-2 dark:text-white">${project.title}</h3>
+        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">${project.desc}</p>
+
+        <!-- 技术标签 -->
+        <!-- flex-wrap: 标签多了自动换行 -->
+        <div class="flex flex-wrap gap-1.5">
+          ${project.tags.map(tag => `
+            <span class="px-2 py-0.5 text-xs rounded-full
+                         bg-blue-50 dark:bg-blue-900/20
+                         text-blue-600 dark:text-blue-400
+                         border border-blue-100 dark:border-blue-800">
+              ${tag}
+            </span>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
 }

@@ -33,6 +33,9 @@
         <li><a href="#skills"
                class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400
                       font-medium transition-colors duration-200">技能</a></li>
+        <li><a href="#projects"
+               class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400
+                      font-medium transition-colors duration-200">项目</a></li>
         <li><a href="#contact"
                class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400
                       font-medium transition-colors duration-200">联系</a></li>
@@ -98,14 +101,37 @@
     </section>
 
     <!-- ========== 关于我 ========== -->
+    <!--
+      两栏布局（边学边做）：
+        - CSS Grid: grid-cols-1（手机单栏）→ lg:grid-cols-[6fr_4fr]（桌面左6右4）
+        - fr 是 fraction 的缩写，表示"份数"，6fr : 4fr 即左栏占 60%、右栏占 40%
+        - flex-wrap：标签云中的标签自动换行，超出宽度就折到下一行
+    -->
     <section id="about" aria-labelledby="about-heading"
              class="py-20 px-6 bg-white dark:bg-gray-900">
-      <div class="max-w-3xl mx-auto text-center">
-        <h2 id="about-heading" class="text-3xl font-bold mb-4 dark:text-white">关于我</h2>
-        <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-          正在学习 Web开发，Computer science，信息工程，游戏制作，绘画，弦论等。
-          以项目驱动学习，边学边做，在实践中成长。
-        </p>
+      <div class="max-w-6xl mx-auto">
+        <h2 id="about-heading" class="text-3xl font-bold mb-10 text-center dark:text-white">关于我</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[6fr_4fr] gap-10 items-start">
+          <!-- 左栏：自我介绍文字 -->
+          <div>
+            <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-4">
+              正在学习 Web开发、Computer Science、信息工程、游戏制作、绘画、弦论等方向。
+            </p>
+            <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+              以项目驱动学习，边学边做，在实践中成长。这个网站就是我的练手之作，
+              每一个模块都在学习新技术点的同时逐步完善。
+            </p>
+          </div>
+
+          <!-- 右栏：技能标签云 —— JS 从 skills 数据动态渲染 -->
+          <!-- flex-wrap: 标签超出容器宽度自动换行，不需要手动分行 -->
+          <div id="about-tags"
+               class="flex flex-wrap gap-2 items-center justify-center lg:justify-start"
+               aria-label="技能标签">
+            <!-- 由 src/render.js:renderTagCloud() 动态填充 -->
+          </div>
+        </div>
       </div>
     </section>
 
@@ -122,6 +148,22 @@
         <div id="skills-grid"
              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- 由 src/render.js:renderSkills() 动态填充 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 项目展示 ========== -->
+    <!-- 项目卡片由 JS 从 src/data/projects.js 动态渲染 -->
+    <section id="projects" aria-labelledby="projects-heading"
+             class="py-20 px-6 bg-white dark:bg-gray-900">
+      <div class="max-w-6xl mx-auto">
+        <h2 id="projects-heading" class="text-3xl font-bold text-center mb-4 dark:text-white">项目作品</h2>
+        <p class="text-gray-500 dark:text-gray-400 text-center mb-12">边学边做的练手项目</p>
+
+        <!-- Grid：手机1列，平板2列，桌面3列 -->
+        <div id="projects-grid"
+             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- 由 src/render.js:renderProjects() 动态填充 -->
         </div>
       </div>
     </section>
