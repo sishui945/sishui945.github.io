@@ -64,10 +64,10 @@ function initScrollEffects() {
         navLinks.forEach(link => {
           const href = link.getAttribute('href')
           if (href === `#${id}`) {
-            link.classList.add('text-blue-600', 'dark:text-blue-400')
+            link.classList.add('text-indigo-600', 'dark:text-indigo-400')
             link.classList.remove('text-gray-600', 'dark:text-gray-300')
           } else {
-            link.classList.remove('text-blue-600', 'dark:text-blue-400')
+            link.classList.remove('text-indigo-600', 'dark:text-indigo-400')
             link.classList.add('text-gray-600', 'dark:text-gray-300')
           }
         })
@@ -84,7 +84,7 @@ function initScrollEffects() {
   // --- 滚动到顶部按钮 ---
   const btn = document.createElement('button')
   btn.innerHTML = '↑'
-  btn.className = 'fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-blue-600 dark:bg-blue-500 text-white shadow-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-300 flex items-center justify-center text-lg opacity-0 pointer-events-none'
+  btn.className = 'fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white shadow-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-all duration-300 flex items-center justify-center text-lg opacity-0 pointer-events-none'
   btn.setAttribute('aria-label', '滚动到顶部')
   btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }))
   document.body.appendChild(btn)

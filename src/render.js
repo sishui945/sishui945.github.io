@@ -5,7 +5,7 @@
 /** 等级对应的中文和颜色 */
 const LEVEL_MAP = {
   comfortable: { label: '熟练', cls: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-100 dark:border-green-800' },
-  learning:    { label: '学习中', cls: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-800' },
+  learning:    { label: '学习中', cls: 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400 border-indigo-100 dark:border-indigo-800' },
   exploring:   { label: '初探', cls: 'bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-600' },
 };
 
@@ -88,7 +88,7 @@ export function renderProjects(container, data) {
         <!-- 图片区 -->
         ${project.image
           ? `<img src="${project.image}" alt="${project.title}" class="w-full h-40 object-cover">`
-          : `<div class="w-full h-40 bg-gradient-to-br from-blue-400 to-purple-500
+          : `<div class="w-full h-40 bg-gradient-to-br from-indigo-400 to-purple-500
                         flex items-center justify-center text-white text-4xl"
                  aria-hidden="true">📂</div>`
         }
@@ -102,9 +102,9 @@ export function renderProjects(container, data) {
           <div class="flex flex-wrap gap-1.5 mb-3">
             ${project.tags.map(tag => `
               <span class="px-2 py-0.5 text-xs rounded-full
-                           bg-blue-50 dark:bg-blue-900/20
-                           text-blue-600 dark:text-blue-400
-                           border border-blue-100 dark:border-blue-800">
+                           bg-indigo-50 dark:bg-indigo-900/20
+                           text-indigo-600 dark:text-indigo-400
+                           border border-indigo-100 dark:border-indigo-800">
                 ${tag}
               </span>
             `).join('')}
@@ -115,7 +115,7 @@ export function renderProjects(container, data) {
             ? `<div class="flex gap-3 pt-2 border-t border-gray-100 dark:border-gray-700">
                 ${project.links.map(link => `
                   <a href="${link.url}" target="_blank" rel="noopener noreferrer"
-                     class="text-sm text-blue-600 dark:text-blue-400 hover:underline
+                     class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline
                             inline-flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -145,11 +145,11 @@ export function renderTagCloud(container, tags) {
   container.innerHTML = sorted.map(tag => {
     const size = 0.75 + (tag.level / 100) * 0.5;
     return `
-      <span class="inline-block px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20
-                   text-blue-700 dark:text-blue-300 rounded-full
-                   hover:bg-blue-100 dark:hover:bg-blue-900/40
+      <span class="inline-block px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/20
+                   text-indigo-700 dark:text-indigo-300 rounded-full
+                   hover:bg-indigo-100 dark:hover:bg-indigo-900/40
                    hover:scale-110 transition-all duration-200 cursor-default
-                   border border-blue-200 dark:border-blue-800"
+                   border border-indigo-200 dark:border-indigo-800"
             style="font-size: ${size}rem"
             title="${tag.label}">
         ${tag.label}
@@ -170,11 +170,11 @@ export function renderTimeline(container, data) {
     <div class="flex-shrink-0 w-64 md:w-72 snap-start
                 p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700
                 hover:shadow-md transition-shadow">
-      <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">${entry.date}</span>
+      <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">${entry.date}</span>
       <h4 class="font-bold mt-1 mb-2 dark:text-white">${entry.title}</h4>
       <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
         ${entry.items.map(item => `<li class="flex items-start gap-1.5">
-          <span class="text-blue-400 dark:text-blue-500 mt-1 shrink-0" aria-hidden="true">▹</span>
+          <span class="text-indigo-400 dark:text-indigo-500 mt-1 shrink-0" aria-hidden="true">▹</span>
           ${item}
         </li>`).join('')}
       </ul>
@@ -205,7 +205,7 @@ export function renderBlogPreview(container, posts) {
       </div>
       <h3 class="text-lg font-bold mb-2 dark:text-white">
         <a href="/blog/post.html?slug=${post.slug}"
-           class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+           class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
           ${post.title}
         </a>
       </h3>
@@ -213,9 +213,9 @@ export function renderBlogPreview(container, posts) {
       <div class="flex flex-wrap gap-1.5">
         ${post.tags.map(tag => `
           <span class="px-2 py-0.5 text-xs rounded-full
-                       bg-blue-50 dark:bg-blue-900/20
-                       text-blue-600 dark:text-blue-400
-                       border border-blue-100 dark:border-blue-800">
+                       bg-indigo-50 dark:bg-indigo-900/20
+                       text-indigo-600 dark:text-indigo-400
+                       border border-indigo-100 dark:border-indigo-800">
             ${tag}
           </span>
         `).join('')}
@@ -236,14 +236,13 @@ export function renderContact(container, data) {
     const extAttrs = item.external ? ' target="_blank" rel="noopener noreferrer"' : '';
     return `
       <a href="${item.url}"${extAttrs}
-         class="group p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700
-                hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-center">
-        <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400
-                    rounded-xl flex items-center justify-center mx-auto mb-4 text-3xl
-                    group-hover:scale-110 transition-transform"
-             aria-hidden="true">${item.emoji}</div>
-        <h3 class="text-lg font-bold mb-1 dark:text-white">${item.label}</h3>
-        <p class="text-gray-500 dark:text-gray-400 text-sm break-all">${item.handle}</p>
+         class="inline-flex items-center gap-2 px-5 py-3 bg-white dark:bg-gray-800
+                rounded-full border border-gray-200 dark:border-gray-700
+                hover:border-indigo-300 dark:hover:border-indigo-700
+                hover:shadow-sm transition-all duration-300 text-sm">
+        <span class="text-lg" aria-hidden="true">${item.emoji}</span>
+        <span class="font-medium dark:text-white">${item.label}</span>
+        <span class="text-gray-400 dark:text-gray-500">${item.handle}</span>
       </a>
     `;
   }).join('');
