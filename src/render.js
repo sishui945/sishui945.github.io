@@ -158,37 +158,6 @@ export function renderTagCloud(container, tags) {
   }).join('');
 }
 
-// ========== 学习旅程时间线 ==========
-
-/**
- * 渲染水平滚动时间线（桌面）或垂直时间线（手机）
- * @param {HTMLElement} container
- * @param {Array} data — [{ date, title, items[] }]
- */
-export function renderTimeline(container, data) {
-  container.innerHTML = data.map((entry, i) => `
-    <div class="flex-shrink-0 w-64 md:w-72 snap-start
-                p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700
-                hover:shadow-md transition-shadow">
-      <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">${entry.date}</span>
-      <h4 class="font-bold mt-1 mb-2 dark:text-white">${entry.title}</h4>
-      <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-        ${entry.items.map(item => `<li class="flex items-start gap-1.5">
-          <span class="text-indigo-400 dark:text-indigo-500 mt-1 shrink-0" aria-hidden="true">▹</span>
-          ${item}
-        </li>`).join('')}
-      </ul>
-    </div>
-    ${i < data.length - 1
-      ? `<div class="flex-shrink-0 flex items-center px-1 text-gray-300 dark:text-gray-600" aria-hidden="true">
-           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-           </svg>
-         </div>`
-      : ''}
-  `).join('');
-}
-
 // ========== 博客预览卡片 ==========
 
 /**

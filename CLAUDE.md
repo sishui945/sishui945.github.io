@@ -58,7 +58,7 @@
 
 ### 当前功能
 
-- 单页 SPA，7 个 section：Hero → 关于我 → 项目 → 技能 → 学习旅程 → 博客预览 → 联系
+- 单页 SPA，6 个 section：Hero → 关于我 → 项目 → 技能 → 博客预览 → 联系
 - 暗色模式（`darkMode: 'class'` + localStorage 持久化）
 - 响应式（移动优先：1 列 → md:2 列 → lg:3 列）
 - 数据驱动渲染：数据文件 → render 函数 → DOM
@@ -81,22 +81,23 @@
 ## 项目结构
 
 ```
-index.html              # 主页面 — 7 个 section，纯 Tailwind 类名
+index.html              # 主页面 — 6 个 section，纯 Tailwind 类名
 src/
-  style.css             # Tailwind 指令 + fadeIn/bounce/section-reveal 动画
+  style.css             # Tailwind 指令 + fadeIn/bounce/section-reveal 动画 + 主题过渡
   main.js               # 入口：初始化渲染 + 暗色模式 + 滚动效果
   theme.js              # 暗色模式切换 + localStorage 持久化
-  render.js             # 7 个渲染函数（renderSkills/renderProjects/...）
+  theme-button.js       # <theme-button> Web Component（太阳/月亮切换动画）
+  render.js             # 6 个渲染函数（renderSkills/renderProjects/...）
   data/
     skills.js           # 技能数据（按类别分组：语言/前端/工具/创意）
     projects.js         # 项目数据（含 status + links）
     contact.js          # 联系方式
     about-tags.js       # 兴趣标签云
     interests.js        # Hero 兴趣徽章
-    timeline.js         # 学习旅程时间线
+    timeline.js         # 学习旅程数据（当前未挂载到页面）
     blog-posts.js       # 博客预览占位数据
   assets/               # 图片（hero.png, logo.png）
-public/                 # 静态资源（favicon.svg, icons.svg）
+public/                 # 静态资源（favicon.svg）
 doc/                    # 大学规划文档（不参与构建）
 ```
 
@@ -113,7 +114,6 @@ doc/                    # 大学规划文档（不参与构建）
 - 环境变量在 .env 文件中，不要提交到 Git
 - 所有新功能先创建 Git 分支再开发
 - 数据修改只需编辑 `src/data/` 下的对应文件，不动 render 函数
-- Hero 区目前写的是"信息工程"——实际是"机器人工程"，下次修改时纠正
 
 ## Skill 自动加载规则
 

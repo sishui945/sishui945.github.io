@@ -15,10 +15,7 @@
     let star = $(".star");
     let isMoved = false;
     let isClicked = false;
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-      toggleThemeBasedOnSystem();
-    });
-    const toggleThemeBasedOnSystem = () => {
+    function toggleThemeBasedOnSystem() {
       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
         if (!isMoved) {
           components.onclick();
@@ -28,7 +25,9 @@
           components.onclick();
         }
       }
-    };
+    }
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", toggleThemeBasedOnSystem);
+
     components.onclick = () => {
       if (isMoved) {
         mainButton.style.transform = "translateX(0)";
@@ -219,7 +218,11 @@
       super();
     }
     connectedCallback() {
-      const initTheme = localStorage.getItem('theme') || this.getAttribute("value") || "light";
+      // 初始状态：localStorage → 属性 → 系统偏好 → light
+      const stored = localStorage.getItem('theme');
+      const initTheme = stored
+        || this.getAttribute("value")
+        || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       const size = +this.getAttribute("size") || 3;
       const shadow = this.attachShadow({ mode: "closed" });
       const container = document.createElement("div");

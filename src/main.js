@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const interestsRow = document.getElementById('interests-row')
   if (interestsRow) renderInterests(interestsRow, interests)
 
-  // 2. 关于我 — 技能标签云
+  // 2. 关于我 — 兴趣标签云
   const tagCloud = document.getElementById('about-tags')
   if (tagCloud) renderTagCloud(tagCloud, aboutTags)
 
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const blogGrid = document.getElementById('blog-preview-grid')
   if (blogGrid) renderBlogPreview(blogGrid, blogPosts)
 
-  // 7. 联系卡片
+  // 6. 联系卡片
   const contactGrid = document.getElementById('contact-grid')
   if (contactGrid) renderContact(contactGrid, contacts)
 
