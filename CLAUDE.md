@@ -115,6 +115,29 @@ doc/                    # 大学规划文档（不参与构建）
 - 数据修改只需编辑 `src/data/` 下的对应文件，不动 render 函数
 - Hero 区目前写的是"信息工程"——实际是"机器人工程"，下次修改时纠正
 
+## Skill 自动加载规则
+
+以下规则覆盖本项目最常见的任务类型。Agent 在匹配到对应场景时，**必须先加载 Skill 再动手**。
+
+### 本项目适用的 Skills
+
+| 场景 | 必须加载的 Skill | 位置 |
+|------|-----------------|------|
+| 任何视觉/UI/样式改动 | `frontend-design` + `design-taste-frontend` | 用户级 |
+| 新功能、新 section、重构 | `brainstorming` | 项目级 |
+| 修 bug、异常行为 | `systematic-debugging` | 项目级 |
+| 多步骤实现任务 | `writing-plans` | 项目级 |
+| 写新 Skill 或改现有 Skill | `writing-skills` | 项目级 |
+| 功能完成、合并前自查 | `verification-before-completion` | 项目级 |
+| 现有网站视觉升级 | `redesign-existing-projects` | 用户级 |
+
+### 缺失 Skill 处理
+
+如果任务匹配上述场景，但对应的 Skill 在本地不存在，Agent 应：
+1. 告知用户缺少哪个 Skill
+2. 使用 `find-skills` Skill 搜索在线可用的替代方案
+3. 或直接使用 `Skill` 工具尝试加载（Claude Code 会自动从注册表下载）
+
 <!-- superpowers-zh:begin (do not edit between these markers) -->
 # Superpowers-ZH 中文增强版
 

@@ -219,7 +219,7 @@
       super();
     }
     connectedCallback() {
-      const initTheme = this.getAttribute("value") || "light";
+      const initTheme = localStorage.getItem('theme') || this.getAttribute("value") || "light";
       const size = +this.getAttribute("size") || 3;
       const shadow = this.attachShadow({ mode: "closed" });
       const container = document.createElement("div");
