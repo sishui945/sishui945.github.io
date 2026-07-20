@@ -34,7 +34,7 @@ Desktop.ini
 
 # 个人文档
 doc/
-
+referance/
 # 包管理器 — 项目使用 pnpm，锁定 npm lockfile
 package-lock.json
 

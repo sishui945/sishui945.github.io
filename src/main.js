@@ -1,5 +1,6 @@
 // 入口文件 —— 负责初始化所有模块
 import './style.css'
+import './theme-button.js'
 import { skillCategories } from './data/skills.js'
 import { projects } from './data/projects.js'
 import { contacts } from './data/contact.js'
