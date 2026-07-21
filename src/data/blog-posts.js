@@ -1,8 +1,8 @@
 // 博客文章元数据
 // Markdown 正文从 blog/posts/ 目录以 ?raw 方式导入
-import cppMd from '../../blog/posts/cpp-pointer-reference.md?raw'
-import tailwindMd from '../../blog/posts/tailwind-pitfalls.md?raw'
-
+import cppMd from '../../blog/posts/cpp/cpp-pointer-reference.md?raw'
+import tailwindMd from '../../blog/posts/css/tailwind-pitfalls.md?raw'
+import cppT1 from '../../blog/posts/cpp/cpp-tutorial-aliyun.md?raw'
 export const blogPosts = [
   {
     id: 1,
@@ -21,5 +21,14 @@ export const blogPosts = [
     tags: ['CSS', '边学边做'],
     slug: 'tailwind-pitfalls',
     content: tailwindMd,
+  },
+  {
+    id: 3,
+    title: 'C++ 入门教程（41课时） - 阿里云大学',
+    date: '2026-07-21',
+    excerpt: 'C++教程',
+    tags: ['C++', '教程'],
+    slug: 'C++ 入门教程（41课时） - 阿里云大学',
+    content: cppT1,
   },
 ];

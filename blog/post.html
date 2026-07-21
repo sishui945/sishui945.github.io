@@ -48,7 +48,7 @@
   <!-- ========== 文章正文 ========== -->
   <main>
     <article class="py-20 px-6 bg-gray-50 dark:bg-gray-950 min-h-screen">
-      <div class="max-w-3xl mx-auto">
+      <div class="max-w-6xl mx-auto">
 
         <!-- 返回链接 -->
         <a href="/blog/"
@@ -60,23 +60,43 @@
           返回全部文章
         </a>
 
-        <div id="post-content">
-          <!-- 由 ../src/blog-post.js 动态渲染：标题 + 日期 + 标签 + Markdown 正文 -->
-          <!-- 加载中/404 也由 JS 处理 -->
-        </div>
+        <div class="flex gap-8">
+          <!-- 左栏：文章列表 -->
+          <aside id="post-sidebar-left"
+                 class="hidden lg:block w-48 shrink-0">
+            <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto sidebar-scroll pb-4">
+              <!-- 由 ../src/blog-post.js 动态渲染 -->
+            </div>
+          </aside>
 
-        <!-- 底部导航 -->
-        <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
-          <a href="/blog/"
-             class="inline-flex items-center gap-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600
-                    text-gray-700 dark:text-gray-300 rounded-lg font-medium
-                    hover:border-indigo-600 dark:hover:border-indigo-400
-                    hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-            返回全部文章
-          </a>
+          <!-- 正文区 -->
+          <div class="min-w-0 flex-1 max-w-3xl">
+            <div id="post-content">
+              <!-- 由 ../src/blog-post.js 动态渲染：标题 + 日期 + 标签 + Markdown 正文 -->
+            </div>
+
+            <!-- 底部导航 -->
+            <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
+              <a href="/blog/"
+                 class="inline-flex items-center gap-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600
+                        text-gray-700 dark:text-gray-300 rounded-lg font-medium
+                        hover:border-indigo-600 dark:hover:border-indigo-400
+                        hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                返回全部文章
+              </a>
+            </div>
+          </div>
+
+          <!-- 右栏：本文目录 -->
+          <aside id="post-sidebar-right"
+                 class="hidden lg:block w-44 shrink-0">
+            <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto sidebar-scroll pb-4">
+              <!-- 由 ../src/blog-post.js 动态渲染 -->
+            </div>
+          </aside>
         </div>
 
       </div>
