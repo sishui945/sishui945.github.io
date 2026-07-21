@@ -173,7 +173,7 @@ export function renderBlogPreview(container, posts) {
         <time datetime="${post.date}">${post.date}</time>
       </div>
       <h3 class="text-lg font-bold mb-2 dark:text-white">
-        <a href="/blog/post.html?slug=${post.slug}"
+        <a href="/blog/post.html?id=${post.id}"
            class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
           ${post.title}
         </a>
