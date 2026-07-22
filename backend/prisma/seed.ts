@@ -1,5 +1,12 @@
+import 'dotenv/config'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../generated/prisma/client'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
+
+function loadMd(filename: string): string {
+  return readFileSync(resolve(__dirname, '../../blog/posts', filename), 'utf-8')
+}
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
@@ -15,67 +22,12 @@ async function main() {
   // === Posts ===
   await prisma.post.upsert({
     where: { slug: 'cpp-pointer-reference' },
-    update: {},
+    update: { content: loadMd('cpp/cpp-pointer-reference.md') },
     create: {
       title: 'C++ 指针与引用总结',
       slug: 'cpp-pointer-reference',
       excerpt: '整理了 C/C++ 指针的核心概念：指针运算、数组与指针的关系、const 指针的三种写法区别。',
-      content: `## 指针基础
-
-指针是 C/C++ 最核心的概念之一——它存储的是另一个变量的**内存地址**。
-
-\`\`\`cpp
-int x = 42;
-int* p = &x;   // p 存储 x 的地址
-int y = *p;    // 解引用：y = 42
-\`\`\`
-
-### 指针与数组
-
-数组名本质上是指向首元素的**常量指针**：
-
-\`\`\`cpp
-int arr[] = {1, 2, 3};
-int* p = arr;  // 等价于 &arr[0]
-\`\`\`
-
----
-
-## const 指针的三种写法
-
-\`\`\`cpp
-// 1. 指向常量的指针
-const int* p1 = &x;
-p1 = &y;   // ✅
-// *p1 = 10; // ❌
-
-// 2. 常量指针
-int* const p2 = &x;
-*p2 = 10;  // ✅
-// p2 = &y; // ❌
-
-// 3. 指向常量的常量指针
-const int* const p3 = &x;
-\`\`\`
-
-记忆口诀：**const 修饰它左边的东西，如果左边没有东西就修饰右边**。
-
----
-
-## 引用 vs 指针
-
-| 特性 | 指针 | 引用 |
-|------|------|------|
-| 可为空 | ✅ | ❌ |
-| 可重新绑定 | ✅ | ❌ |
-
-\`\`\`cpp
-void swap(int& a, int& b) {
-    int t = a; a = b; b = t;
-}
-\`\`\`
-
-函数的输入参数用 \`const T&\`，输出参数用 \`T*\`。`,
+      content: loadMd('cpp/cpp-pointer-reference.md'),
       publishedAt: new Date('2026-07-20'),
       tags: { connect: [{ slug: 'cpp' }, { slug: 'study-notes' }] },
     },
@@ -83,33 +35,12 @@ void swap(int& a, int& b) {
 
   await prisma.post.upsert({
     where: { slug: 'tailwind-pitfalls' },
-    update: {},
+    update: { content: loadMd('css/tailwind-pitfalls.md') },
     create: {
       title: 'Tailwind CSS 踩坑记录',
       slug: 'tailwind-pitfalls',
       excerpt: '从零搭建个人网站时遇到的一些 Tailwind 坑：dark mode 配置、Grid 的 fr 单位、class 优先级覆盖问题。',
-      content: `用 Tailwind CSS 从零搭这个个人网站时，踩了几个坑。
-
-## 1. dark mode 配置
-
-\`\`\`js
-// tailwind.config.js
-export default {
-  darkMode: 'class',
-}
-\`\`\`
-
-坑点：写 \`dark:\` 前缀时必须保证父元素也设了 dark 样式。
-
-## 2. Grid 的 fr 单位
-
-- 任意值用下划线代替空格：\`[5fr_4fr]\` ✅
-- \`md:grid-cols-2\` 会覆盖自定义值
-
-## 3. 好用的 Tailwind 类
-
-- \`line-clamp-2\` — 文本截断
-- \`backdrop-blur-md\` — 毛玻璃效果`,
+      content: loadMd('css/tailwind-pitfalls.md'),
       publishedAt: new Date('2026-07-18'),
       tags: { connect: [{ slug: 'css' }, { slug: 'learning-by-doing' }] },
     },
@@ -117,12 +48,12 @@ export default {
 
   await prisma.post.upsert({
     where: { slug: 'cpp-tutorial-aliyun' },
-    update: {},
+    update: { content: loadMd('cpp/cpp-tutorial-aliyun.md') },
     create: {
       title: 'C++ 入门教程（41课时） - 阿里云大学',
       slug: 'cpp-tutorial-aliyun',
       excerpt: 'C++教程',
-      content: '# C++ 入门教程\n\n阿里云大学 C++ 入门教程笔记。',
+      content: loadMd('cpp/cpp-tutorial-aliyun.md'),
       publishedAt: new Date('2026-07-21'),
       tags: { connect: [{ slug: 'cpp' }, { slug: 'tutorial' }] },
     },

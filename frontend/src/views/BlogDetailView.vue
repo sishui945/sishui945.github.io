@@ -21,6 +21,11 @@ const tocTree = ref<TocItem[]>([])
 
 const slug = computed(() => route.params.slug as string)
 
+const dateStr = computed(() => {
+  if (!store.current) return ''
+  return new Date(store.current.publishedAt).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
+})
+
 // === marked 配置 ===
 marked.use({
   renderer: {
@@ -64,6 +69,11 @@ function extractToc(md: string): TocItem[] {
 // === 生命周期 ===
 onMounted(async () => {
   await Promise.all([store.fetchBySlug(slug.value), store.fetchList()])
+})
+
+const renderedContent = computed(() => {
+  if (!store.current) return ''
+  return marked.parse(store.current.content, { async: false }) as string
 })
 
 watchEffect(() => {
@@ -118,7 +128,7 @@ onUnmounted(() => {
                 {{ store.current.title }}
               </h1>
               <time :datetime="store.current.publishedAt" class="text-sm text-gray-500 dark:text-gray-400 mb-4 block">
-                {{ store.current.publishedAt }}
+                {{ dateStr }}
               </time>
               <div class="flex flex-wrap gap-2">
                 <span
@@ -131,7 +141,7 @@ onUnmounted(() => {
               </div>
             </header>
 
-            <div class="post-content" v-html="marked.parse(store.current.content)" />
+            <div class="post-content" v-html="renderedContent" />
 
             <!-- 底部导航 -->
             <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
@@ -188,8 +198,8 @@ onUnmounted(() => {
   </article>
 </template>
 
-<style scoped>
-/* === Markdown 渲染样式 === */
+<style>
+/* === Markdown 渲染样式（不能 scoped，因为 v-html 的内容没有 scoped data 属性） === */
 .post-content h2 {
   font-family: 'Space Grotesk', system-ui, sans-serif;
   font-size: 1.5rem;

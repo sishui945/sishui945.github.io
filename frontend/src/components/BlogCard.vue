@@ -1,12 +1,17 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PostSummary } from '@/stores/posts'
 
-defineProps<{ post: PostSummary }>()
+const props = defineProps<{ post: PostSummary }>()
+
+const dateStr = computed(() =>
+  new Date(props.post.publishedAt).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }),
+)
 </script>
 
 <template>
   <article class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-    <time :datetime="post.publishedAt" class="text-xs text-gray-500 dark:text-gray-400">{{ post.publishedAt }}</time>
+    <time :datetime="post.publishedAt" class="text-xs text-gray-500 dark:text-gray-400">{{ dateStr }}</time>
     <h2 class="text-lg font-bold mt-1 mb-2 dark:text-white">
       <RouterLink :to="`/blog/${post.slug}`" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
         {{ post.title }}

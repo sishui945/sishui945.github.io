@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 
 interface TocItem {
   level: number
@@ -9,12 +9,12 @@ interface TocItem {
 }
 
 const props = defineProps<{ headings: TocItem[] }>()
-defineEmits<{ 'toggle-mobile': [] }>()
 const activeId = ref<string | null>(null)
 
 let observer: IntersectionObserver | null = null
 
-onMounted(() => {
+function observeHeadings() {
+  observer?.disconnect()
   observer = new IntersectionObserver(
     (entries) => {
       const visible = entries
@@ -25,6 +25,15 @@ onMounted(() => {
     { rootMargin: '-80px 0px -70% 0px' },
   )
   document.querySelectorAll('.post-content h2[id], .post-content h3[id]').forEach((h) => observer!.observe(h))
+}
+
+onMounted(() => {
+  nextTick(() => observeHeadings())
+})
+
+// 当 headings 变化时（内容加载完成后），重新观察 DOM 元素
+watch(() => props.headings, () => {
+  nextTick(() => observeHeadings())
 })
 
 onUnmounted(() => observer?.disconnect())
