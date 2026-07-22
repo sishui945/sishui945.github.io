@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 interface TocItem {
   level: number
@@ -8,35 +8,38 @@ interface TocItem {
   children: TocItem[]
 }
 
-const props = defineProps<{ headings: TocItem[] }>()
+defineProps<{ headings: TocItem[] }>()
 const activeId = ref<string | null>(null)
 
-let observer: IntersectionObserver | null = null
+let rafId = 0
 
-function observeHeadings() {
-  observer?.disconnect()
-  observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((e) => e.isIntersecting)
-        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-      if (visible.length > 0) activeId.value = visible[0].target.id
-    },
-    { rootMargin: '-80px 0px -70% 0px' },
-  )
-  document.querySelectorAll('.post-content h2[id], .post-content h3[id]').forEach((h) => observer!.observe(h))
+function updateActive() {
+  const headings = document.querySelectorAll<HTMLElement>('.post-content h2[id], .post-content h3[id]')
+  if (headings.length === 0) { activeId.value = null; return }
+
+  // 找到第一个仍在视口顶部阈值之下的标题（还没滚过去的）
+  const TOP = 100 // 略大于 navbar 高度，避免标题被遮挡时才算"已过"
+  let current: string | null = null
+  headings.forEach((h) => {
+    if (h.getBoundingClientRect().top <= TOP) current = h.id
+  })
+  activeId.value = current ?? headings[0].id
+}
+
+function onScroll() {
+  if (rafId) cancelAnimationFrame(rafId)
+  rafId = requestAnimationFrame(updateActive)
 }
 
 onMounted(() => {
-  nextTick(() => observeHeadings())
+  window.addEventListener('scroll', onScroll, { passive: true })
+  updateActive()
 })
 
-// 当 headings 变化时（内容加载完成后），重新观察 DOM 元素
-watch(() => props.headings, () => {
-  nextTick(() => observeHeadings())
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
+  cancelAnimationFrame(rafId)
 })
-
-onUnmounted(() => observer?.disconnect())
 </script>
 
 <template>

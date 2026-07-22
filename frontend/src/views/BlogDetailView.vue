@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { marked } from 'marked'
 import { usePostsStore } from '@/stores/posts'
@@ -18,6 +18,22 @@ const route = useRoute()
 const store = usePostsStore()
 const tocOpen = ref(false)
 const tocTree = ref<TocItem[]>([])
+const progress = ref(0)
+let rafId = 0
+
+function updateProgress() {
+  const total = document.documentElement.scrollHeight - window.innerHeight
+  progress.value = total > 0 ? (window.scrollY / total) * 100 : 0
+}
+
+function onScroll() {
+  if (!rafId) {
+    rafId = requestAnimationFrame(() => {
+      rafId = 0
+      updateProgress()
+    })
+  }
+}
 
 const slug = computed(() => route.params.slug as string)
 
@@ -26,11 +42,24 @@ const dateStr = computed(() => {
   return new Date(store.current.publishedAt).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
 })
 
+// === 标题 ID 生成（marked renderer 和 extractToc 共用同一算法保证 ID 一致） ===
+function slugify(text: string): string {
+  return text.toLowerCase().replace(/[^\w一-鿿]+/g, '-').replace(/^-+|-+$/g, '')
+}
+
+function uniqueId(text: string, seen: Map<string, number>): string {
+  const base = slugify(text)
+  const count = seen.get(base) ?? 0
+  seen.set(base, count + 1)
+  return count > 0 ? `${base}-${count + 1}` : base
+}
+
 // === marked 配置 ===
+const headingSeen = new Map<string, number>()
 marked.use({
   renderer: {
     heading({ text, depth }) {
-      const id = text.toLowerCase().replace(/[^\w一-鿿]+/g, '-').replace(/^-+|-+$/g, '')
+      const id = uniqueId(text, headingSeen)
       return `<h${depth} id="${id}">${text}</h${depth}>`
     },
     link({ href, title, text }) {
@@ -42,7 +71,9 @@ marked.use({
 
 // === 提取树形目录 ===
 function extractToc(md: string): TocItem[] {
+  headingSeen.clear() // 重置，让 marked.parse() 重新去重
   const re = /^(#{2,3})\s+(.+)$/gm
+  const tocSeen = new Map<string, number>()
   const flat: { level: number; text: string; id: string }[] = []
   let m
   while ((m = re.exec(md)) !== null) {
@@ -50,7 +81,7 @@ function extractToc(md: string): TocItem[] {
     flat.push({
       level: m[1].length,
       text,
-      id: text.toLowerCase().replace(/[^\w一-鿿]+/g, '-').replace(/^-+|-+$/g, ''),
+      id: uniqueId(text, tocSeen), // 独立去重，和 marked renderer 产生相同 ID
     })
   }
   const tree: TocItem[] = []
@@ -67,8 +98,18 @@ function extractToc(md: string): TocItem[] {
 }
 
 // === 生命周期 ===
-onMounted(async () => {
-  await Promise.all([store.fetchBySlug(slug.value), store.fetchList()])
+onMounted(() => {
+  document.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('scroll', onScroll, { passive: true })
+  updateProgress()
+  Promise.all([store.fetchBySlug(slug.value), store.fetchList()])
+})
+
+watch(slug, (newSlug) => {
+  store.fetchBySlug(newSlug)
+  progress.value = 0
+  // 内容加载后再次更新（v-html 渲染可能延迟于 scroll 事件）
+  setTimeout(updateProgress, 500)
 })
 
 const renderedContent = computed(() => {
@@ -85,11 +126,19 @@ watchEffect(() => {
 
 onUnmounted(() => {
   store.current = null
+  document.removeEventListener('scroll', onScroll)
+  window.removeEventListener('scroll', onScroll)
+  cancelAnimationFrame(rafId)
 })
 </script>
 
 <template>
   <article class="py-20 px-6 bg-gray-50 dark:bg-gray-950 min-h-screen">
+    <!-- 阅读进度条 -->
+    <div
+      class="fixed top-0 left-0 h-[3px] bg-indigo-600 dark:bg-indigo-400 z-50"
+      :style="{ width: `${progress}%` }"
+    />
     <div class="max-w-6xl mx-auto">
       <!-- 返回链接 -->
       <RouterLink

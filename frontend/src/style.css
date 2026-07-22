@@ -24,3 +24,41 @@
     transition: none !important;
   }
 }
+
+/* === 全局滚动条样式 === */
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+html.dark {
+  scrollbar-color: #4b5563 transparent;
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* 暗色模式 */
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
