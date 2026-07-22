@@ -55,32 +55,25 @@ backend/
     main.ts                   # CORS + Swagger + ValidationPipe
 ```
 
-### 数据模型（5 表）
+### 数据模型（4 表，隐式多对多）
 
 ```prisma
 model Post {
-  id          Int        @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
-  slug        String     @unique
-  content     String     // Markdown 原文
+  slug        String   @unique
+  content     String   // Markdown 原文
   excerpt     String?
-  publishedAt DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  tags        PostTag[]
+  publishedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tags        Tag[]    // 隐式多对多，Prisma 自动生成 _PostToTag 表
 }
 
 model Tag {
-  id    Int       @id @default(autoincrement())
-  name  String    @unique
-  posts PostTag[]
-}
-
-model PostTag {
-  postId Int
-  tagId  Int
-  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
-  @@id([postId, tagId])
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique   // "C++" → "cpp", 用于 URL 和 API 查询
+  posts Post[]           // 隐式多对多
 }
 
 model Project {
@@ -92,16 +85,15 @@ model Project {
   status      String   // "building" | "done" | "experiment"
   createdAt   DateTime @default(now())
 }
-
-// 注意：Project 暂不与 Tag 关联，tags 保留在 links 或 JS 元数据中。
-// 未来可参考 PostTag 模式添加 ProjectTag。
 ```
+
+> **隐式 vs 显式**：当前不需要在关联表上加额外字段（不排序、不加时间戳），用隐式多对多代码更简洁。未来如需迁到显式，Prisma 支持无损迁移。
 
 ### API 端点
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | `/posts` | 文章列表，不含 `content` 字段 |
+| GET | `/posts` | 文章列表，不含 `content`。支持 `?tag=cpp` 筛选 |
 | GET | `/posts/:slug` | 单篇全文，含 `content` |
 | GET | `/tags` | 所有标签 + `_count.posts` |
 | GET | `/projects` | 项目列表 |
@@ -137,7 +129,7 @@ frontend/
       client.ts              # Axios 实例，baseURL = import.meta.env.VITE_API_URL
     stores/
       theme.ts               # Pinia: isDark, toggle(), localStorage 持久化
-      posts.ts               # Pinia: list[], current, tags[], loading, error, fetchList(), fetchBySlug()
+      posts.ts               # Pinia: list[], current, tags[], activeTag, loading, error, fetchList(tag?), fetchBySlug()
     router/
       index.ts               # 5 路由 + scrollBehavior
     views/
