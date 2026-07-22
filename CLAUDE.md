@@ -129,9 +129,31 @@ doc/                     # 大学规划文档 + 设计规格 + 实现计划
 
 ### 添加新文章
 
-1. 在 `blog/posts/<category>/` 下写 `.md` 文件
-2. 在 `backend/prisma/seed.ts` 加一条 upsert
-3. 运行 `npx prisma db seed`
+1. 在 `blog/posts/<category>/` 下写 `.md` 文件（不需要 front matter，纯 Markdown）
+2. 在 `backend/prisma/seed.ts` 加一条 upsert（先确保对应 Tag 存在，再 upsert Post）
+3. 运行 `cd backend && npx tsx prisma/seed.ts`
+
+示例（加一篇 Rust 文章）：
+
+```typescript
+// 1. 确保标签存在
+await prisma.tag.upsert({ where: { slug: 'rust' }, update: {}, create: { name: 'Rust', slug: 'rust' } })
+// 2. upsert 文章
+await prisma.post.upsert({
+  where: { slug: 'rust-ownership' },
+  update: { content: loadMd('rust/rust-ownership.md') },
+  create: {
+    title: 'Rust 所有权机制',
+    slug: 'rust-ownership',
+    excerpt: 'Ownership、Borrowing、Lifetime',
+    content: loadMd('rust/rust-ownership.md'),
+    publishedAt: new Date('2026-08-01'),
+    tags: { connect: [{ slug: 'rust' }, { slug: 'study-notes' }] },
+  },
+})
+```
+
+`loadMd()` 是 seed.ts 中的辅助函数，从 `blog/posts/` 读取 .md 文件。`upsert` 的 `update` 必须包含 `content`，否则已存在的记录不会更新内容。
 
 ### 添加新 section / 页面
 
@@ -146,7 +168,53 @@ NestJS 模块化：创建 `src/<name>/` → Controller + Service + Module → �
 - 后端用 `tsx` 运行源码，`nest build` 不用（Prisma v7 ESM/CJS 冲突）
 - `backend/.env` 不提交 Git，含数据库密码
 - 后端所有依赖注入必须用显式 `@Inject()`（tsx 的 esbuild 不支持 `emitDecoratorMetadata`）
-- 所有新功能先创建 Git 分支再开发
+- **直接在 master 分支开发**，不创建 git 分支或 worktree（已验证无冲突）
+- 后端 `backend/.npmrc` 格式是 `key=value`，不是 YAML；`onlyBuiltDependencies=esbuild` 写成 YAML 会报 npm warn
+
+### 数据库表设计
+
+三张表：`Post`、`Tag`、`Project`。Post ↔ Tag 是**隐式多对多**，Prisma 自动生成 `_PostToTag` 中间表。
+
+```prisma
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique    // API 路由基于此字段
+  content     String               // Markdown 原文，从 blog/posts/ 加载
+  excerpt     String?
+  publishedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tags        Tag[]               // 隐式多对多
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique            // 显示名："C++"
+  slug  String @unique            // URL 用："cpp"
+  posts Post[]
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  imageUrl    String?
+  links       Json?               // [{ label: "GitHub", url: "..." }]
+  status      String   @default("building")  // building | done | experiment
+  createdAt   DateTime @default(now())
+}
+```
+
+- **为什么隐式多对多不用显式中间表**：目前标签不需要排序/权重，隐式够用；`tags: { connect: [{ slug }] }` 比手动维护中间表简洁
+- **为什么用 slug 不用 id**：URL 可读 (`/blog/cpp-pointer-reference`)、迁移友好、SEO 友好
+- **Project 表的 links 用 JSON**：每项目链接数量不定，JSON 阵列避冗余字段
+
+### 博客系统踩坑记录
+
+1. **marked.parse() 返回 string 不是 Promise**（marked v18 默认同步，无 `async` renderer 则同步）
+2. **Vue scoped CSS 不作用于 v-html**：`<style scoped>` 中的 `.post-content h2` 不会匹配 `v-html` 渲染的元素，post-content 样式必须写在非 scoped 的 `<style>` 块中
+3. **IntersectionObserver 需在内容加载后注册**：TocSidebar 的 observe 在 `onMounted` 时 DOM 还为空，需要用 `watch(props.headings)` + `nextTick` 在内容渲染后重新 observe
+4. **`fetchTags()` 无 try/catch 会导致 Promise.all 整体失败**：已在 posts.ts 中加错误降级
 
 ## Skill 自动加载规则
 
