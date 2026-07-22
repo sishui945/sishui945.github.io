@@ -58,8 +58,13 @@ export const usePostsStore = defineStore('posts', () => {
   }
 
   async function fetchTags() {
-    const { data } = await api.get('/tags')
-    tags.value = data
+    try {
+      const { data } = await api.get('/tags')
+      tags.value = data
+    } catch (e: any) {
+      // 静默降级：标签获取失败不影响文章列表展示
+      tags.value = []
+    }
   }
 
   function setActiveTag(tag: string | null) {

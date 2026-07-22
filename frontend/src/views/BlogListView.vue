@@ -8,7 +8,12 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 const store = usePostsStore()
 
 onMounted(async () => {
-  await Promise.all([store.fetchList(), store.fetchTags()])
+  store.activeTag = null
+  // 避免重复请求：如果没有列表数据才 fetch，否则只更新 tags
+  await Promise.all([
+    store.list.length === 0 ? store.fetchList() : Promise.resolve(),
+    store.tags.length === 0 ? store.fetchTags() : Promise.resolve(),
+  ])
 })
 </script>
 

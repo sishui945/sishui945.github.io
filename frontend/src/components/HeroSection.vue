@@ -89,7 +89,7 @@ const interests: Interest[] = [
   background: #6366f1;
   animation: twinkle 3s ease-in-out infinite;
 }
-.dark .star {
+:global(.dark) .star {
   background: #a5b4fc;
 }
 @keyframes twinkle {
