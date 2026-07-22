@@ -45,7 +45,7 @@
 
 | 阶段 | 日期 | 主线 | 辅线 |
 |------|------|------|------|
-| 一 | 7/16–7/25 | **个人网站**（Day 1–6 原生已跑通 → Day 7–10 Vue3+NestJS 全栈升级） | C++ |
+| 一 | 7/16–7/25 | **个人网站**（✅ Day 1–6 原生 → Day 7–10 Vue3+NestJS 全栈已完成） | C++ |
 | 二 | 7/26–8/7 | CSAPP + BMP 解析器 | 离散数学 + 六级 |
 | 三 | 8/8–8/22 | 弦论（Goldstein） | 概率统计 + 网站迭代 |
 | 四 | 8/23–8/30 | 数学收尾 + mcmod | 日语语法 |
@@ -69,80 +69,84 @@
 ### 当前功能
 
 - 主页 6 个 section：Hero → 关于我 → 项目 → 技能 → 博客预览 → 联系
-- 博客系统：文章列表页（标签筛选）+ 详情页（marked 渲染 Markdown）+ 三列布局（文章列表 | 正文 | TOC 树形目录）
-- 暗色模式（`darkMode: 'class'` + localStorage 持久化）+ 主题切换按钮 Web Component
-- 响应式（移动优先：1 列 → md:2 列 → lg:3 列）
-- 数据驱动渲染：数据文件 → render 函数 → DOM
-- 导航高亮（IntersectionObserver）+ 滚动到顶部按钮 + section 滚动揭示动画
+- 博客系统：文章列表页（标签筛选）+ 详情页（marked 渲染 Markdown）+ 三列布局（文章列表 | 正文 | TOC 树形目录）+ 移动端 TOC 浮动按钮
+- 暗色模式（`darkMode: 'class'` + Pinia store + localStorage 持久化）
+- 响应式（移动优先）
+- 后端 API：NestJS + Prisma + PostgreSQL + Swagger 文档
 
 ### 规划中功能
 
+- 部署到 Vercel + Railway
 - Giscus 评论、留言板、邮件订阅
 - 音乐播放器（默认关闭）、交互彩蛋
-- 部署到 Vercel
+- 项目独立页面 `/projects`（项目数超过 6 个时）
 
 ## 技术栈
 
-- **构建工具**: Vite 8（Rolldown），多页构建（`vite.config.js`）
-- **Markdown 渲染**: marked
-- **CSS**: Tailwind CSS 3 + PostCSS + Autoprefixer
+- **前端**: Vue 3 + TypeScript + Pinia + Vue Router + Tailwind CSS 3 + marked (Vite 构建)
+- **后端**: NestJS + Prisma + PostgreSQL + Swagger (tsx 直接运行 TypeScript)
 - **包管理器**: pnpm
-- **无框架** — 纯 HTML + 原生 JS (ES modules)，数据视图分离
+- **数据库**: PostgreSQL 17 本地 + Railway 云端
 
 ## 项目结构
 
 ```
-index.html              # 主页面 — 6 个 section，纯 Tailwind 类名
-vite.config.js          # Vite 多页构建配置（3 入口）
+start-backend.bat        # 后端启动脚本（npx tsx --watch）
+start-frontend.bat       # 前端启动脚本（npx vite）
 blog/
-  index.html            # 文章列表页（标签筛选 + 卡片网格）
-  post.html             # 文章详情页（三列布局：文章列表 | 正文 | TOC）
-  posts/                # Markdown 文章源文件，分子目录管理
-    cpp/                #   C++ 相关文章
-    css/                #   CSS 相关文章
-src/
-  style.css             # Tailwind 指令 + 动画 + 主题过渡 + Markdown 渲染样式 + 侧栏样式
-  main.js               # 主页 JS 入口：初始化渲染 + 暗色模式 + 滚动效果
-  blog-list.js          # 博客列表页 JS 入口（标签筛选 + 卡片渲染）
-  blog-post.js          # 博客详情页 JS 入口（marked 渲染 + TOC + scroll spy）
-  theme.js              # 暗色模式切换 + localStorage 持久化
-  theme-button.js       # <theme-button> Web Component（太阳/月亮切换动画）
-  render.js             # 6 个渲染函数（renderSkills/renderProjects/...）
-  data/
-    skills.js           # 技能数据（按类别分组：语言/前端/工具/创意）
-    projects.js         # 项目数据（含 status + links）
-    contact.js          # 联系方式
-    about-tags.js       # 兴趣标签云
-    interests.js        # Hero 兴趣徽章
-    timeline.js         # 学习旅程数据（当前未挂载到页面）
-    blog-posts.js       # 博客元数据（id/标题/日期/标签/摘要 + ?raw import .md 文件）
-  assets/               # 图片（hero.png, logo.png）
-public/                 # 静态资源（favicon.svg）
-doc/                    # 大学规划文档（不参与构建）
+  posts/                 # Markdown 文章源文件，分子目录管理
+    cpp/                 #   C++ 相关文章
+    css/                 #   CSS 相关文章
+backend/
+  prisma/
+    schema.prisma        # Post, Tag, Project（隐式多对多）
+    seed.ts              # 数据填充
+  src/
+    prisma/              # @Global() PrismaModule + PrismaService (PG adapter)
+    posts/               # GET /posts?tag=, GET /posts/:slug
+    tags/                # GET /tags
+    projects/            # GET /projects
+    main.ts              # CORS + Swagger + ValidationPipe
+  .env                   # DATABASE_URL（不提交 Git）
+frontend/
+  src/
+    api/client.ts        # Axios 实例
+    stores/
+      theme.ts           # Pinia 暗色模式 store
+      posts.ts           # Pinia 博客状态 store
+    router/index.ts      # 4 路由（/, /blog, /blog/:slug, 404）
+    views/
+      HomeView.vue       # 单页滚动 6 section
+      BlogListView.vue   # 文章列表 + 标签筛选
+      BlogDetailView.vue # 三列布局 + marked 渲染
+      NotFoundView.vue   # 404
+    components/          # 17 个 Vue 组件
+  vercel.json            # SPA fallback
+doc/                     # 大学规划文档 + 设计规格 + 实现计划
 ```
 
-## 数据视图分离模式
+## 开发模式
 
-### 首页 section（沿用模式）
+### 添加新文章
 
-1. 在 `src/data/xxx.js` 定义数据数组
-2. 在 `src/render.js` 写 `renderXxx(container, data)` 函数
-3. 在 `index.html` 放空容器 `<div id="xxx-grid">`
-4. 在 `src/main.js` 的 `DOMContentLoaded` 里调用渲染
+1. 在 `blog/posts/<category>/` 下写 `.md` 文件
+2. 在 `backend/prisma/seed.ts` 加一条 upsert
+3. 运行 `npx prisma db seed`
 
-### 博客系统（新增模式）
+### 添加新 section / 页面
 
-- 文章 Markdown 原文放在 `blog/posts/<category>/<slug>.md`
-- 元数据注册在 `src/data/blog-posts.js`：`id`、`title`、`date`、`excerpt`、`tags`、`slug`，通过 `import x from '../../blog/posts/...?raw'` 导入正文
-- 列表页 `blog/index.html` → JS 入口 `src/blog-list.js`
-- 详情页 `blog/post.html` → JS 入口 `src/blog-post.js`（读 `?id=` 参数 → `marked.parse()` → 渲染 + 侧栏 TOC）
-- 新增文章只需：1) 写 `.md` 文件 2) 在 `blog-posts.js` 加一条 import + 元数据
+Vue 3 SFC 组件模式：`<script setup lang="ts">` → `<template>` → `<style scoped>`
+
+### 添加新 API 端点
+
+NestJS 模块化：创建 `src/<name>/` → Controller + Service + Module → 在 `app.module.ts` 注册
 
 ## 注意事项
 
-- 环境变量在 .env 文件中，不要提交到 Git
+- 后端用 `tsx` 运行源码，`nest build` 不用（Prisma v7 ESM/CJS 冲突）
+- `backend/.env` 不提交 Git，含数据库密码
+- 后端所有依赖注入必须用显式 `@Inject()`（tsx 的 esbuild 不支持 `emitDecoratorMetadata`）
 - 所有新功能先创建 Git 分支再开发
-- 数据修改只需编辑 `src/data/` 下的对应文件，不动 render 函数
 
 ## Skill 自动加载规则
 
