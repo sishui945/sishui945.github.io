@@ -100,7 +100,8 @@ blog/
 backend/
   prisma/
     schema.prisma        # Post, Tag, Project（隐式多对多）
-    seed.ts              # 数据填充
+    seed.ts              # 数据填充（loadMd 从 blog/posts/ 读 .md）
+  prisma.config.ts       # Prisma v7 配置（datasource + seed 入口）
   src/
     prisma/              # @Global() PrismaModule + PrismaService (PG adapter)
     posts/               # GET /posts?tag=, GET /posts/:slug
@@ -159,15 +160,43 @@ await prisma.post.upsert({
 
 Vue 3 SFC 组件模式：`<script setup lang="ts">` → `<template>` → `<style scoped>`
 
-### 添加新 API 端点
+### 当前 API 端点
 
-NestJS 模块化：创建 `src/<name>/` → Controller + Service + Module → 在 `app.module.ts` 注册
+| Method | Path | 说明 |
+|--------|------|------|
+| GET | `/posts` | 文章列表，可选 `?tag=<slug>` 筛选 |
+| GET | `/posts/:slug` | 单篇文章（含 content） |
+| GET | `/tags` | 所有标签（含 `_count.posts`） |
+| GET | `/projects` | 项目列表（前端暂未使用） |
+
+### 前端数据流
+
+- **博客列表页** `BlogListView`：onMounted 时 `Promise.all([fetchList(), fetchTags()])`，且有缓存逻辑（list/tags 非空时不重复请求），`activeTag` 重置为 null
+- **博客详情页** `BlogDetailView`：onMounted 时同时 fetch 当前文章（用于正文）+ fetch 全部列表（用于 PostSidebar），`onUnmounted` 清空 `store.current`
+- **首页预览** `BlogPreview`：如果 `list` 为空才 `fetchList()`，取前 2 篇
+- **ProjectsGrid**：**硬编码数据**，不调用 `/projects` API — 等项目超过 6 个时再切换到 API
+- **posts store**：`fetchTags()` 有 try/catch 降级为空数组；`setActiveTag()` 会触发 `fetchList(tag)`
+
+### 验证命令
+
+```bash
+# 前端类型检查
+cd frontend && npx vue-tsc --noEmit
+
+# 前端构建
+cd frontend && npx vite build
+
+# 后端类型检查+启动
+cd backend && npx tsx src/main.ts
+```
 
 ## 注意事项
 
 - 后端用 `tsx` 运行源码，`nest build` 不用（Prisma v7 ESM/CJS 冲突）
 - `backend/.env` 不提交 Git，含数据库密码
 - 后端所有依赖注入必须用显式 `@Inject()`（tsx 的 esbuild 不支持 `emitDecoratorMetadata`）
+- **`main.ts` import 顺序不能改**：`import 'reflect-metadata'` 必须第一行，`import 'dotenv/config'` 必须第二行，之后才是 `@nestjs/core` 等
+- **Prisma v7 要点**：Client 从 `../generated/prisma/client` 导入（不是 `@prisma/client`）；需要 `@prisma/adapter-pg` driver adapter；seed 配置在 `prisma.config.ts` 而非 `package.json`
 - **直接在 master 分支开发**，不创建 git 分支或 worktree（已验证无冲突）
 - 后端 `backend/.npmrc` 格式是 `key=value`，不是 YAML；`onlyBuiltDependencies=esbuild` 写成 YAML 会报 npm warn
 
