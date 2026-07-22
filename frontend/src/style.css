@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 主题切换过渡 */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    transition: background-color 0.4s ease;
+  }
+
+  body {
+    transition: background-color 0.4s ease, color 0.3s ease;
+  }
+
+  header, section, footer, nav, a, h1, h2, h3, h4, p, span, li {
+    transition: background-color 0.4s ease, color 0.3s ease, border-color 0.2s ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html, body, * {
+    transition: none !important;
+  }
+}
