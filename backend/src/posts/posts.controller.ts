@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, NotFoundException } from '@nestjs/common'
+import { Controller, Get, Param, Query, NotFoundException, Inject } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger'
 import { PostsService } from './posts.service'
 import { QueryPostsDto } from './dto/query-posts.dto'
@@ -6,7 +6,7 @@ import { QueryPostsDto } from './dto/query-posts.dto'
 @ApiTags('posts')
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(@Inject(PostsService) private readonly postsService: PostsService) {}
 
   @Get()
   @ApiOperation({ summary: '获取文章列表' })

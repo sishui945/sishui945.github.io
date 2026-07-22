@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Inject } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 @Injectable()
 export class TagsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
   findAll() {
     return this.prisma.tag.findMany({
       include: { _count: { select: { posts: true } } },
