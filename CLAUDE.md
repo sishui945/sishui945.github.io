@@ -242,8 +242,10 @@ model Project {
 
 1. **marked.parse() 返回 string 不是 Promise**（marked v18 默认同步，无 `async` renderer 则同步）
 2. **Vue scoped CSS 不作用于 v-html**：`<style scoped>` 中的 `.post-content h2` 不会匹配 `v-html` 渲染的元素，post-content 样式必须写在非 scoped 的 `<style>` 块中
-3. **IntersectionObserver 需在内容加载后注册**：TocSidebar 的 observe 在 `onMounted` 时 DOM 还为空，需要用 `watch(props.headings)` + `nextTick` 在内容渲染后重新 observe
-4. **`fetchTags()` 无 try/catch 会导致 Promise.all 整体失败**：已在 posts.ts 中加错误降级
+3. **Vue Router 复用组件时 `onMounted` 不会重新执行**：`/blog/:slug` 间导航时组件实例被复用，需要用 `watch(route.params.slug)` 监听路由参数变化来重新 fetch 数据。阅读进度条同理 —— 切换文章后需重置进度。
+4. **IntersectionObserver 在 v-html 场景下时序不可靠**：TocSidebar 已从 IntersectionObserver 改为 scroll 事件 + `requestAnimationFrame` 追踪当前标题。原理：遍历 `.post-content h2[id]`，找最后一个 `getBoundingClientRect().top <= 100` 的那个高亮。
+5. **`fetchTags()` 无 try/catch 会导致 Promise.all 整体失败**：已在 posts.ts 中加错误降级
+6. **同名标题需要 ID 去重**：`marked` renderer 和 `extractToc()` 都用 `uniqueId()` 函数（同名追加 `-2`, `-3`），否则 Vue `:key` 重复告警。两处各自维护 `Map<string, number>` 计数器，因遍历顺序一致，生成的 ID 保证相同。
 
 ## Skill 自动加载规则
 

@@ -2,7 +2,7 @@
 import HeroSection from '@/components/HeroSection.vue'
 import AboutSection from '@/components/AboutSection.vue'
 import ProjectsGrid from '@/components/ProjectsGrid.vue'
-import SkillsGrid from '@/components/SkillsGrid.vue'
+
 import BlogPreview from '@/components/BlogPreview.vue'
 import ContactSection from '@/components/ContactSection.vue'
 </script>
@@ -11,7 +11,7 @@ import ContactSection from '@/components/ContactSection.vue'
   <HeroSection />
   <AboutSection />
   <ProjectsGrid />
-  <SkillsGrid />
+
   <BlogPreview />
   <ContactSection />
 </template>

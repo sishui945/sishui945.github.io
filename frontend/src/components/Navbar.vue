@@ -29,9 +29,7 @@ const mobileOpen = ref(false)
         <li>
           <a href="/#projects" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">项目</a>
         </li>
-        <li>
-          <a href="/#skills" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">技能</a>
-        </li>
+
         <li>
           <a href="/#contact" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">联系</a>
         </li>
@@ -65,7 +63,7 @@ const mobileOpen = ref(false)
       <RouterLink to="/" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">首页</RouterLink>
       <a href="/#about" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">关于</a>
       <a href="/#projects" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">项目</a>
-      <a href="/#skills" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">技能</a>
+
       <a href="/#contact" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">联系</a>
       <RouterLink to="/blog" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">博客</RouterLink>
     </div>
