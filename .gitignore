@@ -39,6 +39,7 @@ referance/
 package-lock.json
 
 # AI 工具本地配置
+.superpowers/
 .claude/settings.local.json
 .cursor/
 .aider*
