@@ -124,56 +124,61 @@ function scanTutorials() {
   const map = new Map<string, { title: string; category: string; chapters: { order: number; slug: string; title: string; content: string }[] }>()
   if (!existsSync(TUTORIALS_DIR)) return map
 
-  for (const dirName of readdirSync(TUTORIALS_DIR)) {
-    const dirPath = join(TUTORIALS_DIR, dirName)
-    if (!statSync(dirPath).isDirectory()) continue
+  // tutorials/<category>/<tutorial>/<chapter-files>
+  for (const catDir of readdirSync(TUTORIALS_DIR)) {
+    const catPath = join(TUTORIALS_DIR, catDir)
+    if (!statSync(catPath).isDirectory()) continue
+    const categorySlug = catDir
 
-    const slug = dirName
-    const chapterFiles = readdirSync(dirPath)
-      .filter(f => f.endsWith('.md'))
-      .sort()
+    for (const tutDir of readdirSync(catPath)) {
+      const tutPath = join(catPath, tutDir)
+      if (!statSync(tutPath).isDirectory()) continue
 
-    const chapters = chapterFiles.map(f => {
-      const content = readFileSync(join(dirPath, f), 'utf-8')
-      const firstLine = content.trim().split('\n')[0] || ''
-      const title = (firstLine.startsWith('# ') ? firstLine.replace(/^#\s+/, '').trim() : chapterSlugFromFilename(f)) || '未命名章节'
-      const order = orderFromFilename(f)
-      return { order, slug: chapterSlugFromFilename(f), title, content }
-    })
+      const slug = tutDir
+      const chapterFiles = readdirSync(tutPath)
+        .filter(f => f.endsWith('.md'))
+        .sort()
 
-    // 校验 slug 唯一性
-    const slugs = chapters.map(c => c.slug)
-    const dupes = slugs.filter((s, i) => slugs.indexOf(s) !== i)
-    if (dupes.length > 0) throw new Error(`教程 "${slug}" 中章节 slug 重复: ${dupes.join(', ')}`)
+      const chapters = chapterFiles.map(f => {
+        const content = readFileSync(join(tutPath, f), 'utf-8')
+        const firstLine = content.trim().split('\n')[0] || ''
+        const title = (firstLine.startsWith('# ') ? firstLine.replace(/^#\s+/, '').trim() : chapterSlugFromFilename(f)) || '未命名章节'
+        const order = orderFromFilename(f)
+        return { order, slug: chapterSlugFromFilename(f), title, content }
+      })
 
-    // 校验 order 唯一性
-    const orders = chapters.map(c => c.order)
-    const orderDupes = orders.filter((o, i) => orders.indexOf(o) !== i)
-    if (orderDupes.length > 0) throw new Error(`教程 "${slug}" 中章节序号重复: ${orderDupes.join(', ')}`)
+      // 校验 slug 唯一性
+      const slugs = chapters.map(c => c.slug)
+      const dupes = slugs.filter((s, i) => slugs.indexOf(s) !== i)
+      if (dupes.length > 0) throw new Error(`教程 "${slug}" 中章节 slug 重复: ${dupes.join(', ')}`)
 
-    map.set(slug, { title: slug, category: 'uncategorized', chapters })
+      // 校验 order 唯一性
+      const orders = chapters.map(c => c.order)
+      const orderDupes = orders.filter((o, i) => orders.indexOf(o) !== i)
+      if (orderDupes.length > 0) throw new Error(`教程 "${slug}" 中章节序号重复: ${orderDupes.join(', ')}`)
+
+      map.set(slug, { title: slug, category: categorySlug, chapters })
+    }
   }
   return map
 }
 
 async function syncTutorials(prisma: PrismaClient) {
   const data = scanTutorials()
+  const validSlugs = new Set(data.keys())
 
   for (const [slug, info] of data) {
-    // 确保默认分类存在
     const category = await prisma.category.upsert({
       where: { slug: info.category },
       update: {},
       create: { name: info.category, slug: info.category },
     })
 
-    // upsert 教程
     const tutorial = await prisma.tutorial.upsert({
       where: { slug },
       update: { title: info.title, categoryId: category.id },
       create: { title: info.title, slug, description: null, categoryId: category.id },
     })
-    // 清空旧章节，重新创建（自动处理孤儿记录）
     await prisma.chapter.deleteMany({ where: { tutorialId: tutorial.id } })
 
     for (const ch of info.chapters) {
@@ -188,6 +193,17 @@ async function syncTutorials(prisma: PrismaClient) {
       })
     }
   }
+
+  // 删除文件系统中不存在的教程
+  const existingTutorials = await prisma.tutorial.findMany({ select: { slug: true } })
+  for (const t of existingTutorials) {
+    if (!validSlugs.has(t.slug)) {
+      await prisma.tutorial.delete({ where: { slug: t.slug } })
+    }
+  }
+
+  // 删除空分类
+  await prisma.category.deleteMany({ where: { tutorials: { none: {} }, children: { none: {} } } })
 }
 
 main()
