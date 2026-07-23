@@ -1,8 +1,8 @@
 import 'dotenv/config'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../generated/prisma/client'
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
+import { readFileSync, existsSync, readdirSync, statSync } from 'fs'
+import { resolve, join } from 'path'
 
 function loadMd(filename: string): string {
   return readFileSync(resolve(__dirname, '../../blog/posts', filename), 'utf-8')
@@ -104,7 +104,89 @@ async function main() {
     },
   })
 
-  console.log('Seed completed: 3 posts, 5 tags, 4 projects')
+  await syncTutorials(prisma)
+
+  console.log('Seed completed: 3 posts, 5 tags, 4 projects, 1 tutorial, 2 chapters')
+}
+
+const TUTORIALS_DIR = resolve(__dirname, '../../tutorials')
+
+function chapterSlugFromFilename(filename: string): string {
+  return filename.replace(/\.md$/, '').replace(/^\d+-/, '')
+}
+
+function orderFromFilename(filename: string): number {
+  const match = filename.match(/^(\d+)/)
+  return match ? parseInt(match[1], 10) : 0
+}
+
+function scanTutorials() {
+  const map = new Map<string, { title: string; category: string; chapters: { order: number; slug: string; title: string; content: string }[] }>()
+  if (!existsSync(TUTORIALS_DIR)) return map
+
+  for (const dirName of readdirSync(TUTORIALS_DIR)) {
+    const dirPath = join(TUTORIALS_DIR, dirName)
+    if (!statSync(dirPath).isDirectory()) continue
+
+    const slug = dirName
+    const chapterFiles = readdirSync(dirPath)
+      .filter(f => f.endsWith('.md'))
+      .sort()
+
+    const chapters = chapterFiles.map(f => {
+      const content = readFileSync(join(dirPath, f), 'utf-8')
+      const firstLine = content.trim().split('\n')[0]
+      const title = firstLine.replace(/^#\s+/, '').trim()
+      return {
+        order: orderFromFilename(f),
+        slug: chapterSlugFromFilename(f),
+        title,
+        content,
+      }
+    })
+
+    // 校验 slug 唯一性
+    const slugs = chapters.map(c => c.slug)
+    const dupes = slugs.filter((s, i) => slugs.indexOf(s) !== i)
+    if (dupes.length > 0) throw new Error(`教程 "${slug}" 中章节 slug 重复: ${dupes.join(', ')}`)
+
+    map.set(slug, { title: slug, category: 'uncategorized', chapters })
+  }
+  return map
+}
+
+async function syncTutorials(prisma: PrismaClient) {
+  const data = scanTutorials()
+
+  for (const [slug, info] of data) {
+    // 确保默认分类存在
+    const category = await prisma.category.upsert({
+      where: { slug: info.category },
+      update: {},
+      create: { name: info.category, slug: info.category },
+    })
+
+    // upsert 教程
+    const tutorial = await prisma.tutorial.upsert({
+      where: { slug },
+      update: { title: info.title, categoryId: category.id },
+      create: { title: info.title, slug, description: null, categoryId: category.id },
+    })
+    // 清空旧章节，重新创建（自动处理孤儿记录）
+    await prisma.chapter.deleteMany({ where: { tutorialId: tutorial.id } })
+
+    for (const ch of info.chapters) {
+      await prisma.chapter.create({
+        data: {
+          title: ch.title,
+          slug: ch.slug,
+          content: ch.content,
+          order: ch.order,
+          tutorial: { connect: { id: tutorial.id } },
+        },
+      })
+    }
+  }
 }
 
 main()
