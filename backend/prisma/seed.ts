@@ -59,6 +59,7 @@ async function main() {
     },
   })
 
+
   // === Projects ===
   await prisma.project.upsert({
     where: { id: 1 },
