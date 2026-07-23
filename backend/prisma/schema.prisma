@@ -34,3 +34,38 @@ model Project {
   status      String   @default("building")
   createdAt   DateTime @default(now())
 }
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  slug      String     @unique
+  parentId  Int?
+  parent    Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryTree")
+  tutorials Tutorial[]
+}
+
+model Tutorial {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  description String?
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  chapters    Chapter[]
+  publishedAt DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Chapter {
+  id         Int      @id @default(autoincrement())
+  title      String
+  slug       String
+  content    String
+  order      Int
+  tutorialId Int
+  tutorial   Tutorial @relation(fields: [tutorialId], references: [id])
+
+  @@unique([tutorialId, slug])
+  @@unique([tutorialId, order])
+}
