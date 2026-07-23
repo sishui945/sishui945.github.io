@@ -37,10 +37,10 @@ onMounted(async () => {
                 {{ t.title }}
               </h3>
               <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">
-                {{ t.description || `${t.chapters.length} 个章节` }}
+                {{ t.description || `${t.chapters?.length || 0} 个章节` }}
               </p>
               <span class="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
-                {{ t.chapters.length }} 章 →
+                {{ t.chapters?.length || 0 }} 章 →
               </span>
             </RouterLink>
           </div>
