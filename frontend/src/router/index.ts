@@ -22,6 +22,21 @@ const router = createRouter({
       component: () => import('@/views/BlogDetailView.vue'),
     },
     {
+      path: '/tutorials',
+      name: 'tutorial-list',
+      component: () => import('@/views/TutorialListView.vue'),
+    },
+    {
+      path: '/tutorials/:slug',
+      name: 'tutorial',
+      component: () => import('@/views/TutorialView.vue'),
+    },
+    {
+      path: '/tutorials/:slug/:chapterSlug',
+      name: 'tutorial-chapter',
+      component: () => import('@/views/TutorialView.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFoundView.vue'),
