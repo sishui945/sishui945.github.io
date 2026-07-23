@@ -26,11 +26,19 @@ const currentIndex = computed(() => chapters.value.findIndex(c => c.slug === cha
 const prevChapter = computed(() => currentIndex.value > 0 ? chapters.value[currentIndex.value - 1] : null)
 const nextChapter = computed(() => currentIndex.value < chapters.value.length - 1 ? chapters.value[currentIndex.value + 1] : null)
 
-// marked 配置
+// === 标题 ID 去重（与 BlogDetailView 相同逻辑） ===
+function slugify(text: string): string {
+  return text.toLowerCase().replace(/[^\w一-鿿]+/g, '-').replace(/^-+|-+$/g, '')
+}
+
+const headingSeen = new Map<string, number>()
 marked.use({
   renderer: {
     heading({ text, depth }) {
-      const id = text.toLowerCase().replace(/[^\w一-鿿]+/g, '-').replace(/^-+|-+$/g, '')
+      const base = slugify(text)
+      const count = headingSeen.get(base) ?? 0
+      headingSeen.set(base, count + 1)
+      const id = count > 0 ? `${base}-${count + 1}` : base
       return `<h${depth} id="${id}">${text}</h${depth}>`
     },
     link({ href, title, text }) {
@@ -42,6 +50,7 @@ marked.use({
 
 const renderedContent = computed(() => {
   if (!chapter.value) return ''
+  headingSeen.clear()
   return marked.parse(chapter.value.content, { async: false }) as string
 })
 
@@ -188,7 +197,7 @@ onUnmounted(() => {
                 :current-tutorial-slug="slug"
               />
             </div>
-            <p v-else class="text-xs text-gray-400">加载中...</p>
+            <p v-else class="text-xs text-gray-400 dark:text-gray-500">暂无分类</p>
           </div>
         </aside>
       </div>
@@ -219,4 +228,10 @@ onUnmounted(() => {
 .dark .post-content th { border-color: #4b5563; background: #1f2937; }
 .post-content td { border: 1px solid #d1d5db; padding: 0.5rem 1rem; }
 .dark .post-content td { border-color: #4b5563; }
+.post-content ul, .post-content ol { padding-left: 1.5rem; margin-bottom: 1rem; color: #374151; }
+.dark .post-content ul, .dark .post-content ol { color: #d1d5db; }
+.post-content li { margin-bottom: 0.25rem; }
+.post-content pre code { background: none; padding: 0; color: #e2e8f0; }
+.post-content hr { border: none; border-top: 1px solid #e5e7eb; margin: 2rem 0; }
+.dark .post-content hr { border-color: #374151; }
 </style>

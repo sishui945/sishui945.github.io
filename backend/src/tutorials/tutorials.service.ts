@@ -27,10 +27,8 @@ export class TutorialsService {
   }
 
   async findChapter(tutorialSlug: string, chapterSlug: string) {
-    const tutorial = await this.prisma.tutorial.findUnique({ where: { slug: tutorialSlug } })
-    if (!tutorial) return null
     return this.prisma.chapter.findFirst({
-      where: { tutorialId: tutorial.id, slug: chapterSlug },
+      where: { slug: chapterSlug, tutorial: { slug: tutorialSlug } },
       include: {
         tutorial: { include: { chapters: { orderBy: { order: 'asc' }, select: { id: true, title: true, slug: true, order: true } } } },
       },
@@ -38,10 +36,8 @@ export class TutorialsService {
   }
 
   async findFirstChapter(tutorialSlug: string) {
-    const tutorial = await this.prisma.tutorial.findUnique({ where: { slug: tutorialSlug } })
-    if (!tutorial) return null
     return this.prisma.chapter.findFirst({
-      where: { tutorialId: tutorial.id },
+      where: { tutorial: { slug: tutorialSlug } },
       orderBy: { order: 'asc' },
     })
   }

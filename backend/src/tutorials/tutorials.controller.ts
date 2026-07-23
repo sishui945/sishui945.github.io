@@ -26,9 +26,11 @@ export class TutorialsController {
   @Get(':slug/chapters/first')
   @ApiOperation({ summary: '获取教程第一章' })
   async findFirst(@Param('slug') slug: string) {
-    const tutorial = await this.service.findFirstChapter(slug)
-    if (!tutorial) throw new NotFoundException('该教程暂无章节')
-    return tutorial
+    const t = await this.service.findBySlug(slug)
+    if (!t) throw new NotFoundException(`Tutorial "${slug}" not found`)
+    const chapter = await this.service.findFirstChapter(slug)
+    if (!chapter) throw new NotFoundException('该教程暂无章节')
+    return chapter
   }
 
   @Get(':slug/chapters/:chapterSlug')

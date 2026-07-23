@@ -6,7 +6,7 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 const store = useTutorialsStore()
 
 onMounted(async () => {
-  await Promise.all([store.fetchCategories(), store.fetchList()])
+  await store.fetchCategories()
 })
 </script>
 
@@ -47,7 +47,8 @@ onMounted(async () => {
         </div>
 
         <div v-if="store.categories.length === 0" class="text-center py-20">
-          <p class="text-gray-400 dark:text-gray-500">暂无教程</p>
+          <p v-if="store.categoriesError" class="text-red-500">加载分类失败，请稍后重试</p>
+          <p v-else class="text-gray-400 dark:text-gray-500">暂无教程</p>
         </div>
       </template>
     </div>

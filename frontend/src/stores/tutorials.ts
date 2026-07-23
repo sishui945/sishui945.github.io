@@ -43,6 +43,9 @@ export const useTutorialsStore = defineStore('tutorials', () => {
   const categories = ref<CategoryNode[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const categoriesError = ref(false)
+
+  let chapterReqId = 0
 
   async function fetchList(categorySlug?: string) {
     loading.value = true
@@ -75,26 +78,35 @@ export const useTutorialsStore = defineStore('tutorials', () => {
   async function fetchChapter(tutorialSlug: string, chapterSlug: string) {
     loading.value = true
     error.value = null
+    const id = ++chapterReqId
     try {
       const { data } = await api.get(`/tutorials/${tutorialSlug}/chapters/${chapterSlug}`)
-      chapter.value = data
+      if (id === chapterReqId) {
+        chapter.value = data
+      }
       return data
     } catch (e: any) {
-      error.value = e.message
+      if (id === chapterReqId) {
+        error.value = e.message
+      }
       return null
     } finally {
-      loading.value = false
+      if (id === chapterReqId) {
+        loading.value = false
+      }
     }
   }
 
   async function fetchCategories() {
+    categoriesError.value = false
     try {
       const { data } = await api.get('/categories')
       categories.value = data
     } catch (e: any) {
       categories.value = []
+      categoriesError.value = true
     }
   }
 
-  return { list, tutorial, chapter, categories, loading, error, fetchList, fetchTutorial, fetchChapter, fetchCategories }
+  return { list, tutorial, chapter, categories, loading, error, categoriesError, fetchList, fetchTutorial, fetchChapter, fetchCategories }
 })

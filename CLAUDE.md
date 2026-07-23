@@ -68,7 +68,7 @@
 
 ### 当前功能
 
-- 主页 6 个 section：Hero → 关于我 → 项目 → 技能 → 博客预览 → 联系
+- 主页 5 个 section：Hero → 关于我 → 项目 → 博客预览 → 联系
 - 博客系统：文章列表页（标签筛选）+ 详情页（marked 渲染 Markdown）+ 三列布局（文章列表 | 正文 | TOC 树形目录）+ 移动端 TOC 浮动按钮
 - 暗色模式（`darkMode: 'class'` + Pinia store + localStorage 持久化）
 - 响应式（移动优先）
@@ -121,7 +121,7 @@ frontend/
       BlogListView.vue   # 文章列表 + 标签筛选
       BlogDetailView.vue # 三列布局 + marked 渲染
       NotFoundView.vue   # 404
-    components/          # 17 个 Vue 组件
+    components/          # 13 个 Vue 组件
   vercel.json            # SPA fallback
 doc/                     # 大学规划文档 + 设计规格 + 实现计划
 ```

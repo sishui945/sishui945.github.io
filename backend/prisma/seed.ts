@@ -135,20 +135,21 @@ function scanTutorials() {
 
     const chapters = chapterFiles.map(f => {
       const content = readFileSync(join(dirPath, f), 'utf-8')
-      const firstLine = content.trim().split('\n')[0]
-      const title = firstLine.replace(/^#\s+/, '').trim()
-      return {
-        order: orderFromFilename(f),
-        slug: chapterSlugFromFilename(f),
-        title,
-        content,
-      }
+      const firstLine = content.trim().split('\n')[0] || ''
+      const title = (firstLine.startsWith('# ') ? firstLine.replace(/^#\s+/, '').trim() : chapterSlugFromFilename(f)) || '未命名章节'
+      const order = orderFromFilename(f)
+      return { order, slug: chapterSlugFromFilename(f), title, content }
     })
 
     // 校验 slug 唯一性
     const slugs = chapters.map(c => c.slug)
     const dupes = slugs.filter((s, i) => slugs.indexOf(s) !== i)
     if (dupes.length > 0) throw new Error(`教程 "${slug}" 中章节 slug 重复: ${dupes.join(', ')}`)
+
+    // 校验 order 唯一性
+    const orders = chapters.map(c => c.order)
+    const orderDupes = orders.filter((o, i) => orders.indexOf(o) !== i)
+    if (orderDupes.length > 0) throw new Error(`教程 "${slug}" 中章节序号重复: ${orderDupes.join(', ')}`)
 
     map.set(slug, { title: slug, category: 'uncategorized', chapters })
   }
