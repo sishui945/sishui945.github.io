@@ -24,14 +24,14 @@ const mobileOpen = ref(false)
           </RouterLink>
         </li>
         <li>
-          <a href="/#about" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">关于</a>
+          <RouterLink to="/#about" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">关于</RouterLink>
         </li>
         <li>
-          <a href="/#projects" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">项目</a>
+          <RouterLink to="/#projects" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">项目</RouterLink>
         </li>
 
         <li>
-          <a href="/#contact" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">联系</a>
+          <RouterLink to="/#contact" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">联系</RouterLink>
         </li>
         <li>
           <RouterLink to="/tutorials" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200" active-class="text-indigo-600 dark:text-indigo-400">
@@ -66,10 +66,10 @@ const mobileOpen = ref(false)
     <!-- 移动端菜单 -->
     <div v-if="mobileOpen" class="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-4 space-y-3">
       <RouterLink to="/" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">首页</RouterLink>
-      <a href="/#about" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">关于</a>
-      <a href="/#projects" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">项目</a>
+      <RouterLink to="/#about" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">关于</RouterLink>
+      <RouterLink to="/#projects" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">项目</RouterLink>
 
-      <a href="/#contact" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">联系</a>
+      <RouterLink to="/#contact" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">联系</RouterLink>
       <RouterLink to="/tutorials" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">教程</RouterLink>
       <RouterLink to="/blog" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">博客</RouterLink>
     </div>

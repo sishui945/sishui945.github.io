@@ -98,6 +98,7 @@ export const useTutorialsStore = defineStore('tutorials', () => {
   }
 
   async function fetchCategories() {
+    loading.value = true
     categoriesError.value = false
     try {
       const { data } = await api.get('/categories')
@@ -105,6 +106,8 @@ export const useTutorialsStore = defineStore('tutorials', () => {
     } catch (e: any) {
       categories.value = []
       categoriesError.value = true
+    } finally {
+      loading.value = false
     }
   }
 
