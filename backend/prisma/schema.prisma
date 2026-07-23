@@ -62,9 +62,10 @@ model Chapter {
   title      String
   slug       String
   content    String
-  order      Int
+  order      Int      @default(0)
   tutorialId Int
-  tutorial   Tutorial @relation(fields: [tutorialId], references: [id])
+  tutorial   Tutorial @relation(fields: [tutorialId], references: [id], onDelete: Cascade)
+  updatedAt  DateTime @updatedAt
 
   @@unique([tutorialId, slug])
   @@unique([tutorialId, order])
