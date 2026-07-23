@@ -1,8 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import ThemeToggle from './ThemeToggle.vue'
 
+const router = useRouter()
 const mobileOpen = ref(false)
+
+function goTo(hash: string) {
+  mobileOpen.value = false
+  router.push('/')
+  setTimeout(() => {
+    const el = document.querySelector(hash)
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+  }, 100)
+}
 </script>
 
 <template>
@@ -24,14 +35,14 @@ const mobileOpen = ref(false)
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/#about" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">关于</RouterLink>
+          <button type="button" @click="goTo('#about')" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">关于</button>
         </li>
         <li>
-          <RouterLink to="/#projects" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">项目</RouterLink>
+          <button type="button" @click="goTo('#projects')" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">项目</button>
         </li>
 
         <li>
-          <RouterLink to="/#contact" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">联系</RouterLink>
+          <button type="button" @click="goTo('#contact')" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200">联系</button>
         </li>
         <li>
           <RouterLink to="/tutorials" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200" active-class="text-indigo-600 dark:text-indigo-400">
@@ -66,10 +77,10 @@ const mobileOpen = ref(false)
     <!-- 移动端菜单 -->
     <div v-if="mobileOpen" class="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-4 space-y-3">
       <RouterLink to="/" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">首页</RouterLink>
-      <RouterLink to="/#about" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">关于</RouterLink>
-      <RouterLink to="/#projects" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">项目</RouterLink>
+      <button type="button" @click="goTo('#about')" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium">关于</button>
+      <button type="button" @click="goTo('#projects')" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium">项目</button>
 
-      <RouterLink to="/#contact" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">联系</RouterLink>
+      <button type="button" @click="goTo('#contact')" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium">联系</button>
       <RouterLink to="/tutorials" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">教程</RouterLink>
       <RouterLink to="/blog" class="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium" @click="mobileOpen = false">博客</RouterLink>
     </div>

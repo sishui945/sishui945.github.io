@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useTutorialsStore } from '@/stores/tutorials'
-import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 
 const store = useTutorialsStore()
 
@@ -16,14 +15,15 @@ onMounted(async () => {
       <h1 class="font-display text-3xl md:text-4xl font-bold dark:text-white mb-2">教程</h1>
       <p class="text-gray-500 dark:text-gray-400 mb-10">按分类浏览，系统化学习</p>
 
-      <LoadingSkeleton v-if="store.loading" type="list" />
+      <p v-if="store.loading" class="text-gray-400 dark:text-gray-500 text-center py-20">加载中...</p>
 
-      <div v-else-if="store.error" class="text-center py-20">
-        <p class="text-red-500">{{ store.error }}</p>
+      <p v-else-if="store.categoriesError" class="text-red-500 text-center py-20">加载失败，请确认后端已启动</p>
+
+      <div v-else-if="store.categories.length === 0" class="text-center py-20">
+        <p class="text-gray-400 dark:text-gray-500">暂无教程，请先运行 <code class="bg-gray-200 dark:bg-gray-700 px-1 rounded">cd backend && npx tsx prisma/seed.ts</code></p>
       </div>
 
       <template v-else>
-        <!-- 按分类分组展示 -->
         <div v-for="cat in store.categories" :key="cat.id" class="mb-12">
           <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">{{ cat.name }}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -44,11 +44,6 @@ onMounted(async () => {
               </span>
             </RouterLink>
           </div>
-        </div>
-
-        <div v-if="store.categories.length === 0" class="text-center py-20">
-          <p v-if="store.categoriesError" class="text-red-500">加载分类失败，请稍后重试</p>
-          <p v-else class="text-gray-400 dark:text-gray-500">暂无教程</p>
         </div>
       </template>
     </div>
