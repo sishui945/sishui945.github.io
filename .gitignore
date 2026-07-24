@@ -40,7 +40,8 @@ package-lock.json
 
 # AI 工具本地配置
 .superpowers/
-.claude/settings.local.json
+.claude/
+CLAUDE.md
 .cursor/
 .aider*
 .continue/
