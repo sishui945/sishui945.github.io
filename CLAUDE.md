@@ -69,8 +69,9 @@
 ### 当前功能
 
 - 主页 5 个 section：Hero → 关于我 → 项目 → 博客预览 → 联系
-- 博客系统：文章列表页（标签筛选）+ 详情页（marked 渲染 Markdown）+ 三列布局（文章列表 | 正文 | TOC 树形目录）+ 移动端 TOC 浮动按钮
-- 暗色模式（`darkMode: 'class'` + Pinia store + localStorage 持久化）
+- 博客系统：文章列表页（标签筛选）+ 详情页（marked 渲染 Markdown）+ 三列布局（文章列表 | 正文 | TOC 树形目录）+ 移动端 TOC 浮动按钮+ 阅读进度条
+- 教程系统：分类 → 教程 → 章节三级结构 + 三栏阅读页（章节目录 | 正文 + 翻页 | 分类导航树）+ seed 自动同步
+- 暗色模式（`darkMode: 'class'` + Pinia store + localStorage 持久化）+ 动画主题切换按钮
 - 响应式（移动优先）
 - 后端 API：NestJS + Prisma + PostgreSQL + Swagger 文档
 
@@ -93,16 +94,21 @@
 ```
 start-backend.bat        # 后端启动脚本（npx tsx --watch）
 start-frontend.bat       # 前端启动脚本（npx vite）
+seed.bat                 # 数据库 seed 脚本
+delete-post.bat          # 删除博客文章快捷脚本
 blog/
   posts/                 # Markdown 文章源文件，分子目录管理
     cpp/                 #   C++ 相关文章
     css/                 #   CSS 相关文章
+tutorials/               # 教程 Markdown 源文件，<分类>/<教程>/ 两级目录
+  C-C++/
+    cpp/                 #   C++ 教程
 backend/
   prisma/
-    schema.prisma        # Post, Tag, Project（隐式多对多）
-    seed.ts              # 数据填充（loadMd 从 blog/posts/ 读 .md）
+    schema.prisma        # Post, Tag, Project, Category, Tutorial, Chapter
+    seed.ts              # 数据填充（loadMd + scanTutorials 自动同步）
   prisma.config.ts       # Prisma v7 配置（datasource + seed 入口）
-  src/
+  delete.ts              # 管理工具：按类型删除记录
     prisma/              # @Global() PrismaModule + PrismaService (PG adapter)
     posts/               # GET /posts?tag=, GET /posts/:slug
     tags/                # GET /tags
@@ -156,6 +162,34 @@ await prisma.post.upsert({
 
 `loadMd()` 是 seed.ts 中的辅助函数，从 `blog/posts/` 读取 .md 文件。`upsert` 的 `update` 必须包含 `content`，否则已存在的记录不会更新内容。
 
+运行 seed：双击 `seed.bat` 或 `cd backend && npx tsx prisma/seed.ts`
+
+### 添加新教程
+
+1. 在 `tutorials/<分类>/<教程>/` 下写 `.md` 文件，命名 `01-xxx.md`, `02-xxx.md`（编号决定章节顺序）
+2. 运行 seed（自动扫描 `tutorials/` 目录，同步到数据库，清理 orphan）
+
+教程目录结构示例：
+```
+tutorials/
+  C-C++/                  # 分类 slug
+    cpp/                  # 教程 slug
+      01-intro.md         # 第一章
+      02-pointer.md       # 第二章
+```
+
+分类名默认取目录名，可在数据库中手动修改为友好的显示名。
+
+### 删除数据
+
+```bash
+cd backend && npx tsx delete.ts <type> <slug>
+# type: post | tutorial | project | tag
+# 示例: npx tsx delete.ts post cpp-fundation
+```
+
+删文章：双击 `delete-post.bat`，输入 slug 回车。
+
 ### 添加新 section / 页面
 
 Vue 3 SFC 组件模式：`<script setup lang="ts">` → `<template>` → `<style scoped>`
@@ -168,6 +202,10 @@ Vue 3 SFC 组件模式：`<script setup lang="ts">` → `<template>` → `<style
 | GET | `/posts/:slug` | 单篇文章（含 content） |
 | GET | `/tags` | 所有标签（含 `_count.posts`） |
 | GET | `/projects` | 项目列表（前端暂未使用） |
+| GET | `/categories` | 分类树（含嵌套教程） |
+| GET | `/tutorials` | 教程列表，可选 `?category=<slug>` |
+| GET | `/tutorials/:slug` | 教程详情（含章节列表） |
+| GET | `/tutorials/:slug/chapters/:chapterSlug` | 章节详情（含 content） |
 
 ### 前端数据流
 
