@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, watch, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, watch } from 'vue'
+import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import { marked } from 'marked'
 import { useTutorialsStore, type ChapterSummary } from '@/stores/tutorials'
@@ -74,11 +75,12 @@ watch([() => slug.value, () => chapterSlug.value], async () => {
   window.scrollTo(0, 0)
 })
 
-watchEffect(() => {
-  if (chapter.value) {
-    document.title = `${chapter.value.title} | ${chapter.value.tutorial?.title || ''} | 似水Sishui`
-  }
+const pageTitle = computed(() => {
+  if (!chapter.value) return ''
+  const tutorialTitle = chapter.value.tutorial?.title || ''
+  return tutorialTitle ? `${chapter.value.title} | ${tutorialTitle}` : chapter.value.title
 })
+useHead({ title: pageTitle })
 
 onUnmounted(() => {
   store.tutorial = null

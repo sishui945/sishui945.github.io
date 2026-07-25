@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import { marked } from 'marked'
 import { usePostsStore } from '@/stores/posts'
@@ -117,9 +118,11 @@ const renderedContent = computed(() => {
   return marked.parse(store.current.content, { async: false }) as string
 })
 
+const postTitle = computed(() => store.current?.title ?? '')
+useHead({ title: postTitle })
+
 watchEffect(() => {
   if (store.current) {
-    document.title = `${store.current.title} | 似水Sishui`
     tocTree.value = extractToc(store.current.content)
   }
 })
